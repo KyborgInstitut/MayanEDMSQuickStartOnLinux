@@ -39,5 +39,8 @@
       "public": true
     }
   },
-    {"model": "search.savedsearch", "pk": 20, "fields": {"label": "Zollrelevante Dokumente", "query": "tag:Zollrelevant OR metadata__customs_mrn:* OR metadata__eur1_number:*", "public": true}}
+    {"model": "search.savedsearch", "pk": 20, "fields": {"label": "Zollrelevante Dokumente", "query": "tag:Zollrelevant OR metadata__customs_mrn:* OR metadata__eur1_number:*", "public": true}},
+    {"model": "search.savedsearch", "pk": 30, "fields": {"label": "Gesellschaftsunterlagen", "query": "tag:GmbH-Gründung OR tag:Unterschriftsberechtigung", "public": true}},
+  {"model": "search.savedsearch", "pk": 31, "fields": {"label": "DSGVO-Dokumentation", "query": "tag:DSGVO OR cabinet:Datenschutz", "public": true}},
+  {"model": "search.savedsearch", "pk": 32, "fields": {"label": "Aktuelle Versicherungen", "query": "cabinet:Versicherungen", "public": true}}
 ]
