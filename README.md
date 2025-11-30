@@ -9,9 +9,11 @@ The script has been developed using [grok.com](https://grok.com)
 
 ## Copy files to your server
 
+~~~
 wget -qO install-mayan.sh https://raw.githubusercontent.com/dein-name/mayan/main/install-mayan.sh
 chmod +x install-mayan.sh
 ./install-mayan.sh
+~~~
 
 Make sure you have updated Linux and installed a terminal editor like nano.
 
