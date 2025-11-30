@@ -115,5 +115,12 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2303, "required": true}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2304, "required": true}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2305, "required": false}},
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2306, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2306, "required": false}},
+
+  // Exportfilter Buchhaltung
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3100, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3101, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3102, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3103, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3104, "required": false}}
 ]
