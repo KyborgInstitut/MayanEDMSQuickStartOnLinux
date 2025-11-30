@@ -86,5 +86,9 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2005, "required": false}},
 
   // Rechnung – kann mehrere customs_certificate verknüpfen
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 2006, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 2006, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2010, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2011, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2012, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2013, "required": false}}
 ]
