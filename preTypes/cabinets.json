@@ -7,6 +7,7 @@
   {"model": "cabinets.cabinet", "pk": 20, "fields": {"label": "Rechtsfälle"}},
   {"model": "cabinets.cabinet", "pk": 21, "fields": {"label": "Rechtsfälle → Erbfall Max Mustermann 2028", "parent": 20}},
   {"model": "cabinets.cabinet", "pk": 22, "fields": {"label": "Rechtsfälle → Erbschaft Mutter 2025", "parent": 20}},
+  {"model": "cabinets.cabinet", "pk": 50, "fields": {"label": "Insolvenz / Umstrukturierung"}},
 
   // GmbH-spezifisch – neu
   {"model": "cabinets.cabinet", "pk": 10, "fields": {"label": "GmbH – Buchhaltung"}},
