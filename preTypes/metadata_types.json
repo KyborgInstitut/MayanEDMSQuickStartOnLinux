@@ -116,5 +116,12 @@
   {"model": "metadata.metadatatype", "pk": 2202, "fields": {"name": "pentest_tester", "label": "Durchführender", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 2203, "fields": {"name": "pentest_date", "label": "Testdatum", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 2204, "fields": {"name": "pentest_risk_level", "label": "Höchstes Risiko", "default": "Critical", "lookup": "", "required": true}},
-  {"model": "metadata.metadatatype", "pk": 2205, "fields": {"name": "pentest_related_case", "label": "Verknüpfter Rechtsfall", "default": "", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk": 2205, "fields": {"name": "pentest_related_case", "label": "Verknüpfter Rechtsfall", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2300, "fields": {"name": "breach_date", "label": "Datum des Vorfalls", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2301, "fields": {"name": "breach_type", "label": "Art des Vorfalls", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2302, "fields": {"name": "breach_scope", "label": "Betroffene Systeme/Daten", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2303, "fields": {"name": "breach_affected_persons", "label": "Anzahl betroffener Personen", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2304, "fields": {"name": "breach_risk_level", "label": "Risiko für Betroffene", "default": "hoch", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2305, "fields": {"name": "breach_meldefrist", "label": "Meldung an Behörde am", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2306, "fields": {"name": "breach_measures_taken", "label": "Getroffene Maßnahmen", "default": "", "lookup": "", "required": false}}
 ]
