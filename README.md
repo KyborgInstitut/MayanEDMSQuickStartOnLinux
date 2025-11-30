@@ -9,7 +9,7 @@ The script has been developed using [grok.com](https://grok.com)
 
 ## Copy files to your server
 
-~~~
+~~~bash
 wget -qO install-mayan.sh https://raw.githubusercontent.com/dein-name/mayan/main/install-mayan.sh
 chmod +x install-mayan.sh
 ./install-mayan.sh
@@ -21,7 +21,10 @@ After finishing the script, please logout of the terminal and login again, to ge
 Using a ssh connection, simply reconnect it.
 
 ## Getting information about the status of MayanEDMS
+
+~~~bash
 docker compose logs -f mayan-mayan_app-1
+~~~
 
 ## Notes:
 Make sure to give the installation process some time, around 5-10 Minutes after finishing the  script,
