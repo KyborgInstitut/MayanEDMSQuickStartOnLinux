@@ -92,5 +92,12 @@
   {"model": "metadata.metadatatype", "pk": 1901, "fields": {"name": "eur1_number", "label": "EUR.1 / Ursprungsnachweis Nummer", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1902, "fields": {"name": "customs_certificate_link", "label": "Link zu CE/Zollbescheid (PDF, E-Mail etc.)", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1903, "fields": {"name": "customs_pod_link", "label": "Zoll-POD / Zustellnachweis", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1904, "fields": {"name": "customs_status", "label": "Zollstatus", "default": "Offen", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk": 1904, "fields": {"name": "customs_status", "label": "Zollstatus", "default": "Offen", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2000, "fields": {"name": "customs_supplier", "label": "Lieferant", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2001, "fields": {"name": "customs_document_type", "label": "Art des Nachweises", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2002, "fields": {"name": "customs_valid_from", "label": "Gültig ab", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2003, "fields": {"name": "customs_valid_until", "label": "Gültig bis", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2004, "fields": {"name": "customs_tariff_numbers", "label": "Zolltarifnummer(n)", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 2005, "fields": {"name": "customs_product_description", "label": "Produktbeschreibung", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 2006, "fields": {"name": "customs_certificate_link", "label": "Zoll-/Lieferantennachweis (verknüpft)", "default": "", "lookup": "", "required": false, "multiple": true}}
 ]
