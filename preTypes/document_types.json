@@ -24,5 +24,6 @@
   {"model": "documents.documenttype", "pk": "academic_record", "fields": {"label": "Studien-/Ausbildungsunterlagen & Leistungsnachweise"}},
   {"model": "documents.documenttype", "pk": "customer_project", "fields": {"label": "Kundenprojekt / Beratung / individuelles Projekt"}},
   {"model": "documents.documenttype", "pk": "software_license", "fields": {"label": "Software-Lizenz / Wartungsvertrag"}},
-  {"model": "documents.documenttype", "pk": "customs_certificate", "fields": {"label": "Zoll-/Lieferantennachweis / Flüchtigkeitsbescheinigung"}}
+  {"model": "documents.documenttype", "pk": "customs_certificate", "fields": {"label": "Zoll-/Lieferantennachweis / Flüchtigkeitsbescheinigung"}},
+  {"model": "documents.documenttype", "pk": "own_product", "fields": {"label": "Eigene Produkte / Stückliste / Zolltarifnummern"}}
 ]
