@@ -15,5 +15,9 @@
   {"model": "tags.tag", "pk": 201, "fields": {"label": "DSGVO", "color": "purple"}},
   {"model": "tags.tag", "pk": 202, "fields": {"label": "Jahresabschluss", "color": "gold"}},
   {"model": "tags.tag", "pk": 203, "fields": {"label": "KSK", "color": "brown"}},
-  {"model": "tags.tag", "pk": 204, "fields": {"label": "Unterschriftsberechtigung", "color": "navy"}}
+  {"model": "tags.tag", "pk": 204, "fields": {"label": "Unterschriftsberechtigung", "color": "navy"}},
+  {"model": "tags.tag", "pk": 300, "fields": {"label": "buchungsjahr-2025", "color": "lightblue"}},
+  {"model": "tags.tag", "pk": 301, "fields": {"label": "buchungsquartal-Q2", "color": "yellow"}},
+  {"model": "tags.tag", "pk": 302, "fields": {"label": "kunde-müller", "color": "green"}},
+  {"model": "tags.tag", "pk": 303, "fields": {"label": "datenquelle-shopify", "color": "purple"}}
 ]
