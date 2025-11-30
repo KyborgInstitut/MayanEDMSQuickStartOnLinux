@@ -106,5 +106,14 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2202, "required": true}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2203, "required": true}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2204, "required": true}},
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2205, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2205, "required": false}},
+
+  // DSGVO Vorfall
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2300, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2301, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2302, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2303, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2304, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2305, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["data_breach"], "metadata_type": 2306, "required": false}}
 ]
