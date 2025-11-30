@@ -1,0 +1,137 @@
+[
+  // 1. root (Superuser – alles)
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "root",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedrootpassword",
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true,
+      "first_name": "Administrator",
+      "last_name": "Root",
+      "email": "admin@ihrfirma.de",
+      "date_joined": "2025-11-30T12:00:00Z"
+    }
+  },
+
+  // 2. standard (normaler Familien-/Mitarbeiter-Zugriff)
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "standard",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedstandardpassword",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "first_name": "Max",
+      "last_name": "Mustermann",
+      "email": "max@ihrfirma.de",
+      "date_joined": "2025-11-30T12:05:00Z"
+    }
+  },
+
+  // 3. steuerpruefung_2025 (nur lesend auf Rechnungen 2025)
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "steuerpruefung_2025",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedsteuer2025password",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "first_name": "Steuerprüfung",
+      "last_name": "2025",
+      "email": "",
+      "date_joined": "2025-11-30T12:10:00Z"
+    }
+  },
+
+  // 4. steuerberater (freier Zugriff auf alle steuerrelevanten Daten)
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "steuerberater",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedsteuerberaterpassword",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "first_name": "Steuerberater",
+      "last_name": "Demo",
+      "email": "berater@steuerkanzlei.de",
+      "date_joined": "2025-11-30T12:15:00Z"
+    }
+  },
+
+  // Rollen
+  {
+    "model": "auth.role",
+    "pk": 10,
+    "fields": {"label": "Standard-Benutzer"}
+  },
+  {
+    "model": "auth.role",
+    "pk": 20,
+    "fields": {"label": "Steuerprüfung 2025 – Nur Lesen"}
+  },
+  {
+    "model": "auth.role",
+    "pk": 30,
+    "fields": {"label": "Steuerberater – Voller Steuerzugriff"}
+  },
+
+  // Cabinets
+  {
+    "model": "cabinets.cabinet",
+    "pk": 1,
+    "fields": {"label": "Privat"}
+  },
+  {
+    "model": "cabinets.cabinet",
+    "pk": 2,
+    "fields": {"label": "GbR-Steuer"}
+  },
+  {
+    "model": "cabinets.cabinet",
+    "pk": 3,
+    "fields": {"label": "Steuerprüfung 2025 – Nur Rechnungen"}
+  },
+
+  // Benutzer → Rollen
+  {
+    "model": "auth.user_roles",
+    "fields": {"user": 2, "role": 10}
+  },
+  {
+    "model": "auth.user_roles",
+    "fields": {"user": 3, "role": 20}
+  },
+  {
+    "model": "auth.user_roles",
+    "fields": {"user": 4, "role": 30}
+  },
+
+  // Cabinet-Zugriff
+
+  // Standard-Benutzer: nur Privat
+  {
+    "model": "cabinets.cabinet_access",
+    "fields": {"cabinet": 1, "role": 10, "permission": ["view_cabinet", "add_document_to_cabinet", "remove_document_from_cabinet"]}
+  },
+
+  // Steuerprüfung 2025: nur lesend auf speziellem Cabinet mit Rechnungen 2025
+  {
+    "model": "cabinets.cabinet_access",
+    "fields": {"cabinet": 3, "role": 20, "permission": ["view_cabinet", "view_document"]}
+  },
+
+  // Steuerberater: voller Zugriff auf GbR-Steuer
+  {
+    "model": "cabinets.cabinet_access",
+    "fields": {"cabinet": 2, "role": 30, "permission": ["view_cabinet", "add_document_to_cabinet", "remove_document_from_cabinet", "view_document", "edit_document", "delete_document"]}
+  }
+]
