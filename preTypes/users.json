@@ -1,5 +1,5 @@
 [
-  // 1. root (Superuser – alles)
+  // 1. root bleibt Superuser (wird bei Installation automatisch angelegt – hier nur zur Vollständigkeit)
   {
     "model": "auth.user",
     "pk": 1,
@@ -16,54 +16,88 @@
     }
   },
 
-  // 2. standard (normaler Familien-/Mitarbeiter-Zugriff)
+  // 2. Normaler Mitarbeiter / Familienmitglied
   {
     "model": "auth.user",
     "pk": 2,
     "fields": {
-      "username": "standard",
-      "password": "pbkdf2_sha256$600000$randomsalt$hashedstandardpassword",
+      "username": "mitarbeiter",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedpassword",
       "is_superuser": false,
       "is_staff": false,
       "is_active": true,
-      "first_name": "Max",
-      "last_name": "Mustermann",
-      "email": "max@ihrfirma.de",
+      "first_name": "Anna",
+      "last_name": "Schmidt",
+      "email": "anna@ihrfirma.de",
       "date_joined": "2025-11-30T12:05:00Z"
     }
   },
 
-  // 3. steuerpruefung_2025 (nur lesend auf Rechnungen 2025)
+  // 3. Nur-lesender Zugriff (z. B. Praktikant, externe Buchhaltung)
   {
     "model": "auth.user",
     "pk": 3,
     "fields": {
-      "username": "steuerpruefung_2025",
-      "password": "pbkdf2_sha256$600000$randomsalt$hashedsteuer2025password",
+      "username": "praktikant",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedpassword",
       "is_superuser": false,
       "is_staff": false,
       "is_active": true,
-      "first_name": "Steuerprüfung",
-      "last_name": "2025",
+      "first_name": "Lukas",
+      "last_name": "Praktikant",
       "email": "",
       "date_joined": "2025-11-30T12:10:00Z"
     }
   },
 
-  // 4. steuerberater (freier Zugriff auf alle steuerrelevanten Daten)
+  // 4. Steuerprüfer 2025 – nur lesend auf Buchhaltung 2025
   {
     "model": "auth.user",
     "pk": 4,
     "fields": {
+      "username": "steuerpruefer_2025",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedpassword",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "first_name": "Finanzamt",
+      "last_name": "Prüfer 2025",
+      "email": "",
+      "date_joined": "2025-11-30T12:15:00Z"
+    }
+  },
+
+  // 5. Steuerberater – voller Zugriff auf alle steuerrelevanten Cabinets
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
       "username": "steuerberater",
-      "password": "pbkdf2_sha256$600000$randomsalt$hashedsteuerberaterpassword",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedpassword",
       "is_superuser": false,
       "is_staff": false,
       "is_active": true,
       "first_name": "Steuerberater",
-      "last_name": "Demo",
-      "email": "berater@steuerkanzlei.de",
-      "date_joined": "2025-11-30T12:15:00Z"
+      "last_name": "Müller",
+      "email": "mueller@steuerkanzlei.de",
+      "date_joined": "2025-11-30T12:20:00Z"
+    }
+  },
+
+  // 6. Anwalt – nur lesend auf aktuellen Rechtsfall
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "username": "anwalt_fall2025",
+      "password": "pbkdf2_sha256$600000$randomsalt$hashedpassword",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true,
+      "first_name": "Rechtsanwalt",
+      "last_name": "Dr. Meier",
+      "email": "meier@kanzlei.de",
+      "date_joined": "2025-11-30T12:25:00Z"
     }
   },
 
@@ -71,34 +105,27 @@
   {
     "model": "auth.role",
     "pk": 10,
-    "fields": {"label": "Standard-Benutzer"}
+    "fields": {"label": "Mitarbeiter – voller Zugriff"}
   },
   {
     "model": "auth.role",
     "pk": 20,
-    "fields": {"label": "Steuerprüfung 2025 – Nur Lesen"}
+    "fields": {"label": "Nur Lesen (Praktikant, externe Buchhaltung)"}
   },
   {
     "model": "auth.role",
     "pk": 30,
-    "fields": {"label": "Steuerberater – Voller Steuerzugriff"}
-  },
-
-  // Cabinets
-  {
-    "model": "cabinets.cabinet",
-    "pk": 1,
-    "fields": {"label": "Privat"}
+    "fields": {"label": "Steuerprüfer 2025 – nur Buchhaltung 2025"}
   },
   {
-    "model": "cabinets.cabinet",
-    "pk": 2,
-    "fields": {"label": "GbR-Steuer"}
+    "model": "auth.role",
+    "pk": 40,
+    "fields": {"label": "Steuerberater – alle steuerrelevanten Bereiche"}
   },
   {
-    "model": "cabinets.cabinet",
-    "pk": 3,
-    "fields": {"label": "Steuerprüfung 2025 – Nur Rechnungen"}
+    "model": "auth.role",
+    "pk": 50,
+    "fields": {"label": "Anwalt – nur aktueller Fall"}
   },
 
   // Benutzer → Rollen
@@ -114,24 +141,44 @@
     "model": "auth.user_roles",
     "fields": {"user": 4, "role": 30}
   },
-
-  // Cabinet-Zugriff
-
-  // Standard-Benutzer: nur Privat
   {
-    "model": "cabinets.cabinet_access",
-    "fields": {"cabinet": 1, "role": 10, "permission": ["view_cabinet", "add_document_to_cabinet", "remove_document_from_cabinet"]}
+    "model": "auth.user_roles",
+    "fields": {"user": 5, "role": 40}
+  },
+  {
+    "model": "auth.user_roles",
+    "fields": {"user": 6, "role": 50}
   },
 
-  // Steuerprüfung 2025: nur lesend auf speziellem Cabinet mit Rechnungen 2025
+  // Cabinet-Zugriffe (exemplarisch – erweitern Sie nach Bedarf)
+
+  // Mitarbeiter: vollen Zugriff auf fast alles
   {
     "model": "cabinets.cabinet_access",
-    "fields": {"cabinet": 3, "role": 20, "permission": ["view_cabinet", "view_document"]}
+    "fields": {"cabinet": [1,2,10,11,12,13,14,20,30,40], "role": 10, "permission": ["view_cabinet", "add_document_to_cabinet", "remove_document_from_cabinet", "view_document", "edit_document"]}
   },
 
-  // Steuerberater: voller Zugriff auf GbR-Steuer
+  // Nur Lesen: nur anzeigen überall
   {
     "model": "cabinets.cabinet_access",
-    "fields": {"cabinet": 2, "role": 30, "permission": ["view_cabinet", "add_document_to_cabinet", "remove_document_from_cabinet", "view_document", "edit_document", "delete_document"]}
+    "fields": {"cabinet": [1,2,10,11,12,13,14,20,30,40], "role": 20, "permission": ["view_cabinet", "view_document"]}
+  },
+
+  // Steuerprüfer 2025: nur lesend auf Buchhaltung + spezielles Unter-Cabinet
+  {
+    "model": "cabinets.cabinet_access",
+    "fields": {"cabinet": [10, 60], "role": 30, "permission": ["view_cabinet", "view_document"]}
+  },
+
+  // Steuerberater: vollständig auf alle steuerrelevanten Cabinets
+  {
+    "model": "cabinets.cabinet_access",
+    "fields": {"cabinet": [10,11,12,13,14,20], "role": 40, "permission": ["view_cabinet", "add_document_to_cabinet", "remove_document_from_cabinet", "view_document", "edit_document"]}
+  },
+
+  // Anwalt: nur lesend auf aktuellen Rechtsfall
+  {
+    "model": "cabinets.cabinet_access",
+    "fields": {"cabinet": [21], "role": 50, "permission": ["view_cabinet", "view_document"]}
   }
 ]
