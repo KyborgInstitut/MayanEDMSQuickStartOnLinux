@@ -74,5 +74,17 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 1901, "required": false}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 1902, "required": false}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["shipping_document"], "metadata_type": 1903, "required": false}},
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["shipping_document"], "metadata_type": 1904, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["shipping_document"], "metadata_type": 1904, "required": false}},
+
+  [
+  // customs_certificate – alle Felder
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2000, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2001, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2002, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2003, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2004, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["customs_certificate"], "metadata_type": 2005, "required": false}},
+
+  // Rechnung – kann mehrere customs_certificate verknüpfen
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 2006, "required": false}}
 ]
