@@ -103,5 +103,12 @@
   {"model": "metadata.metadatatype", "pk": 2010, "fields": {"name": "customs_contact_name", "label": "Ansprechpartner beim Lieferanten", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 2011, "fields": {"name": "customs_contact_email", "label": "E-Mail Ansprechpartner", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 2012, "fields": {"name": "customs_contact_phone", "label": "Telefon Ansprechpartner", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 2013, "fields": {"name": "customs_our_address", "label": "Unsere Anschrift für neuen Nachweis", "default": "Musterfirma GmbH\nMusterstraße 1\n12345 Musterstadt", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk": 2013, "fields": {"name": "customs_our_address", "label": "Unsere Anschrift für neuen Nachweis", "default": "Musterfirma GmbH\nMusterstraße 1\n12345 Musterstadt", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2100, "fields": {"name": "product_name", "label": "Produktbezeichnung", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2101, "fields": {"name": "product_sku", "label": "Artikelnummer", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2102, "fields": {"name": "product_tariff_numbers", "label": "Eigene Zolltarifnummer(n)", "default": "", "lookup": "", "required": true, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 2103, "fields": {"name": "product_components", "label": "Komponenten / Zulieferer", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 2104, "fields": {"name": "product_valid_supplier_certificate", "label": "Gültiger Lieferantennachweis (auto)", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2105, "fields": {"name": "product_show_expired_certificates", "label": "Abgelaufene Nachweise anzeigen", "default": "Nein", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 3000, "fields": {"name": "company_address", "label": "Unsere Firmenanschrift (zentral)", "default": "Musterfirma GmbH\nMusterstraße 1\n12345 Musterstadt\nDeutschland\nUSt-ID: DE123456789", "lookup": "", "required": false}}
 ]
