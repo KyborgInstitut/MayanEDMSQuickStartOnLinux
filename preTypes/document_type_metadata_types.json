@@ -67,5 +67,12 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["software_license"], "metadata_type": 1801, "required": true}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["software_license"], "metadata_type": 1802, "required": false}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["software_license"], "metadata_type": 1803, "required": false}},
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["software_license"], "metadata_type": 1804, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["software_license"], "metadata_type": 1804, "required": false}},
+
+  // customs
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 1900, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 1901, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice"], "metadata_type": 1902, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["shipping_document"], "metadata_type": 1903, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["shipping_document"], "metadata_type": 1904, "required": false}}
 ]
