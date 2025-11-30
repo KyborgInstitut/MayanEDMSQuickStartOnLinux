@@ -117,5 +117,13 @@
         }
       ]
     }
-  }
+  },
+
+  {
+  "action_type": "send_email",
+  "subject": "Aufbewahrung abgelaufen: {{ document.label }}",
+  "body": "Dokument {{ document.label }} ist löschbar. Prüfen Sie: {{ document.get_absolute_url }}",
+  "to": "admin@ihrfirma.de",
+  "condition": "{% if document.tag == 'retention_expired' %}True{% endif %}"
+}
 ]
