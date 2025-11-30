@@ -27,5 +27,7 @@
   {"model": "documents.documenttype", "pk": "customs_certificate", "fields": {"label": "Zoll-/Lieferantennachweis / Flüchtigkeitsbescheinigung"}},
   {"model": "documents.documenttype", "pk": "own_product", "fields": {"label": "Eigene Produkte / Stückliste / Zolltarifnummern"}},
   {"model": "documents.documenttype", "pk": "pentest_report", "fields": {"label": "IT-Sicherheitsbericht / Pentest / Vulnerability Scan"}},
-  {"model": "documents.documenttype", "pk": "data_breach", "fields": {"label": "Datenschutzvorfall / Hacker-Angriff / Meldepflichtiger Verstoß"}}
+  {"model": "documents.documenttype", "pk": "data_breach", "fields": {"label": "Datenschutzvorfall / Hacker-Angriff / Meldepflichtiger Verstoß"}},
+  {"model": "documents.documenttype", "pk": "marketing_campaign", "fields": {"label": "Marketing-Kampagne / Werbemaßnahme"}},
+  {"model": "documents.documenttype", "pk": "marketing_persona", "fields": {"label": "Marketing-Persona / Zielgruppe"}}
 ]
