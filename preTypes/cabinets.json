@@ -3,6 +3,7 @@
   {"model": "cabinets.cabinet", "pk": 1, "fields": {"label": "Privat"}},
   {"model": "cabinets.cabinet", "pk": 2, "fields": {"label": "GbR-Steuer"}},
   {"model": "cabinets.cabinet", "pk": 30, "fields": {"label": "IT-Sicherheit & Pentests"}},
+  {"model": "cabinets.cabinet", "pk": 40, "fields": {"label": "Datenschutzvorfälle & Hacker-Angriffe"}},
   {"model": "cabinets.cabinet", "pk": 20, "fields": {"label": "Rechtsfälle"}},
   {"model": "cabinets.cabinet", "pk": 21, "fields": {"label": "Rechtsfälle → Erbfall Max Mustermann 2028", "parent": 20}},
   {"model": "cabinets.cabinet", "pk": 22, "fields": {"label": "Rechtsfälle → Erbschaft Mutter 2025", "parent": 20}},
