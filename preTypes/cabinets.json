@@ -1,5 +1,12 @@
 [
-  {"model": "cabinets.cabinet", "pk": 10, "fields": {"label": "Gesellschaft"}},
-  {"model": "cabinets.cabinet", "pk": 11, "fields": {"label": "Datenschutz"}},
-  {"model": "cabinets.cabinet", "pk": 12, "fields": {"label": "Versicherungen"}}
+  // Bestehende (Beispiel)
+  {"model": "cabinets.cabinet", "pk": 1, "fields": {"label": "Privat"}},
+  {"model": "cabinets.cabinet", "pk": 2, "fields": {"label": "GbR-Steuer"}},
+
+  // GmbH-spezifisch – neu
+  {"model": "cabinets.cabinet", "pk": 10, "fields": {"label": "GmbH – Buchhaltung"}},
+  {"model": "cabinets.cabinet", "pk": 11, "fields": {"label": "GmbH – Gesellschaft"}},
+  {"model": "cabinets.cabinet", "pk": 12, "fields": {"label": "GmbH – Datenschutz & AV-Verträge"}},
+  {"model": "cabinets.cabinet", "pk": 13, "fields": {"label": "GmbH – Versicherungen & Vollmachten"}},
+  {"model": "cabinets.cabinet", "pk": 14, "fields": {"label": "GmbH – Personal"}}
 ]
