@@ -10,5 +10,10 @@
   {"model": "tags.tag", "pk": 111, "fields": {"label": "Freigabe widerrufen", "color": "darkred"}},
   {"model": "tags.tag", "pk": 112, "fields": {"label": "Anonymisiert", "color": "gray"}},
   {"model": "tags.tag", "pk": 113, "fields": {"label": "Migration komplett", "color": "lightblue"}},
-  {"model": "tags.tag", "pk": 120, "fields": {"label": "Zollrelevant", "color": "darkblue"}}
+  {"model": "tags.tag", "pk": 120, "fields": {"label": "Zollrelevant", "color": "darkblue"}},
+  {"model": "tags.tag", "pk": 200, "fields": {"label": "GmbH-Gründung", "color": "darkgreen"}},
+  {"model": "tags.tag", "pk": 201, "fields": {"label": "DSGVO", "color": "purple"}},
+  {"model": "tags.tag", "pk": 202, "fields": {"label": "Jahresabschluss", "color": "gold"}},
+  {"model": "tags.tag", "pk": 203, "fields": {"label": "KSK", "color": "brown"}},
+  {"model": "tags.tag", "pk": 204, "fields": {"label": "Unterschriftsberechtigung", "color": "navy"}}
 ]
