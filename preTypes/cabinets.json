@@ -10,6 +10,7 @@
   {"model": "cabinets.cabinet", "pk": 50, "fields": {"label": "Insolvenz / Umstrukturierung"}},
   {"model": "cabinets.cabinet", "pk": 51, "fields": {"label": "Notfall / Pandemie"}},
   {"model": "cabinets.cabinet", "pk": 52, "fields": {"label": "Umwelt & Nachhaltigkeit"}},
+  {"model": "cabinets.cabinet", "pk": 60, "fields": {"label": "Steuerprüfung 2025 – Nur Rechnungen", "parent": 10}}
 
   // GmbH-spezifisch – neu
   {"model": "cabinets.cabinet", "pk": 10, "fields": {"label": "GmbH – Buchhaltung"}},
