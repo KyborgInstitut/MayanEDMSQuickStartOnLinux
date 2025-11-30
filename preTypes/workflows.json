@@ -3,7 +3,7 @@
     "model": "workflows.workflow",
     "pk": 10,
     "fields": {
-      "label": "Aufbewahrungsfristen + Rechtssperre + Vererbung",
+      "label": "Aufbewahrungsfristen + Rechtssperre + Vererbung + selektive Eingrenzung",
       "document_types": ["*"]
     }
   },
@@ -24,7 +24,7 @@
       "label": "Fristen prüfen & markieren",
       "origin_state": 101,
       "destination_state": 101,
-      "condition": "True",
+      "condition": "{% if document.metadata_value_of.buchungsjahr|default:'' == '2025' or document.metadata_value_of.buchungsquartal|default:'' == 'Q2' or 'Müller' in document.metadata_value_of.kunde|default:'' or 'Shopify' in document.metadata_value_of.datenquelle|default:'' %}True{% else %}False{% endif %}",
       "action": [
         {
           "action_type": "tag_attach",
