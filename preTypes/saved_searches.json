@@ -42,5 +42,9 @@
     {"model": "search.savedsearch", "pk": 20, "fields": {"label": "Zollrelevante Dokumente", "query": "tag:Zollrelevant OR metadata__customs_mrn:* OR metadata__eur1_number:*", "public": true}},
     {"model": "search.savedsearch", "pk": 30, "fields": {"label": "Gesellschaftsunterlagen", "query": "tag:GmbH-Gründung OR tag:Unterschriftsberechtigung", "public": true}},
   {"model": "search.savedsearch", "pk": 31, "fields": {"label": "DSGVO-Dokumentation", "query": "tag:DSGVO OR cabinet:Datenschutz", "public": true}},
-  {"model": "search.savedsearch", "pk": 32, "fields": {"label": "Aktuelle Versicherungen", "query": "cabinet:Versicherungen", "public": true}}
+  {"model": "search.savedsearch", "pk": 32, "fields": {"label": "Aktuelle Versicherungen", "query": "cabinet:Versicherungen", "public": true}},
+  // saved_searches.json – ergänzen
+  {"model": "search.savedsearch", "pk": 40, "fields": {"label": "GmbH – Buchhaltung komplett", "query": "cabinet:\"GmbH – Buchhaltung\"", "public": true}},
+  {"model": "search.savedsearch", "pk": 41, "fields": {"label": "GmbH – AV-Verträge (Datenschutz)", "query": "cabinet:\"GmbH – Datenschutz & AV-Verträge\"", "public": true}},
+  {"model": "search.savedsearch", "pk": 42, "fields": {"label": "GmbH – Gesellschaftsunterlagen", "query": "cabinet:\"GmbH – Gesellschaft\"", "public": true}}
 ]
