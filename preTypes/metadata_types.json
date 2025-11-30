@@ -13,7 +13,7 @@
   {"model": "metadata.metadatatype", "pk": 12, "fields": {"name": "supplier_account_number", "label": "Kreditorennummer", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 13, "fields": {"name": "cost_center", "label": "Kostenträger / Projekt", "default": "GbR Allgemein", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 14, "fields": {"name": "booked", "label": "Buchungsstatus", "default": "Noch nicht gebucht", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 15, "fields": {"name": "payment_method", ""lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 15, "fields": {"name": "payment_method", "label": "Zahlweg", "default": "Überweisung", "lookup": "", "required": false}}
   {"model": "metadata.metadatatype", "pk": 16, "fields": {"name": "cash_discount_possible", "label": "Skonto möglich", "default": "Nein", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 17, "fields": {"name": "comment", "label": "Bemerkung", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 18, "fields": {"name": "external_uuid", "label": "Externe ID / UUID", "default": "", "lookup": "", "required": false}},
