@@ -46,5 +46,7 @@
   // saved_searches.json – ergänzen
   {"model": "search.savedsearch", "pk": 40, "fields": {"label": "GmbH – Buchhaltung komplett", "query": "cabinet:\"GmbH – Buchhaltung\"", "public": true}},
   {"model": "search.savedsearch", "pk": 41, "fields": {"label": "GmbH – AV-Verträge (Datenschutz)", "query": "cabinet:\"GmbH – Datenschutz & AV-Verträge\"", "public": true}},
-  {"model": "search.savedsearch", "pk": 42, "fields": {"label": "GmbH – Gesellschaftsunterlagen", "query": "cabinet:\"GmbH – Gesellschaft\"", "public": true}}
+  {"model": "search.savedsearch", "pk": 42, "fields": {"label": "GmbH – Gesellschaftsunterlagen", "query": "cabinet:\"GmbH – Gesellschaft\"", "public": true}},
+  {"model": "search.savedsearch", "pk": 50, "fields": {"label": "Alle Rechtsfälle", "query": "cabinet:\"Rechtsfälle\"", "public": true}},
+  {"model": "search.savedsearch", "pk": 51, "fields": {"label": "Laufende Erbfälle", "query": "cabinet:\"Rechtsfälle\" AND tag:aktiv", "public": true}}
 ]
