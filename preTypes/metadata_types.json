@@ -99,5 +99,9 @@
   {"model": "metadata.metadatatype", "pk": 2003, "fields": {"name": "customs_valid_until", "label": "Gültig bis", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 2004, "fields": {"name": "customs_tariff_numbers", "label": "Zolltarifnummer(n)", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk": 2005, "fields": {"name": "customs_product_description", "label": "Produktbeschreibung", "default": "", "lookup": "", "required": false, "multiple": true}},
-  {"model": "metadata.metadatatype", "pk": 2006, "fields": {"name": "customs_certificate_link", "label": "Zoll-/Lieferantennachweis (verknüpft)", "default": "", "lookup": "", "required": false, "multiple": true}}
+  {"model": "metadata.metadatatype", "pk": 2006, "fields": {"name": "customs_certificate_link", "label": "Zoll-/Lieferantennachweis (verknüpft)", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 2010, "fields": {"name": "customs_contact_name", "label": "Ansprechpartner beim Lieferanten", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2011, "fields": {"name": "customs_contact_email", "label": "E-Mail Ansprechpartner", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2012, "fields": {"name": "customs_contact_phone", "label": "Telefon Ansprechpartner", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2013, "fields": {"name": "customs_our_address", "label": "Unsere Anschrift für neuen Nachweis", "default": "Musterfirma GmbH\nMusterstraße 1\n12345 Musterstadt", "lookup": "", "required": false}}
 ]
