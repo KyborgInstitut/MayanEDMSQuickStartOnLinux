@@ -1,0 +1,9 @@
+[
+  {"model": "dashboards.dashboardwidget", "pk": 1, "fields": {"dashboard": 1, "widget_type": "saved_search", "title": "Offene Rechnungen", "saved_search": 1, "order": 1, "rows": 8, "columns": 6}},
+  {"model": "dashboards.dashboardwidget", "pk": 2, "fields": {"dashboard": 1, "widget_type": "saved_search", "title": "Fristen nächste 30 Tage", "saved_search": 2, "order": 2, "rows": 6, "columns": 6}},
+  {"model": "dashboards.dashboardwidget", "pk": 3, "fields": {"dashboard": 1, "widget_type": "saved_search", "title": "KSK prüfen", "saved_search": 10, "order": 3, "rows": 5, "columns": 4}},
+  {"model": "dashboards.dashboardwidget", "pk": 4, "fields": {"dashboard": 1, "widget_type": "saved_search", "title": "Widerrufene Freigaben", "saved_search": 11, "order": 4, "rows": 5, "columns": 4}},
+  {"model": "dashboards.dashboardwidget", "pk": 5, "fields": {"dashboard": 1, "widget_type": "saved_search", "title": "Wirklich löschbare Dokumente", "saved_search": 1, "order": 5, "rows": 8, "columns": 8}},
+  {"model": "dashboards.dashboardwidget", "pk": 6, "fields": {"dashboard": 1, "widget_type": "recent_documents", "title": "Neueste Dokumente", "rows": 10, "columns": 4, "order": 6}}, 
+  {"model": "dashboards.dashboardwidget", "pk": 7, "fields": {"dashboard": 1, "widget_type": "tags", "title": "Wichtige Tags", "rows": 6, "columns": 4, "order": 7}}
+]
