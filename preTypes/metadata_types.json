@@ -1,10 +1,6 @@
 [
   {"model": "metadata.metadatatype", "pk": 1, "fields": {"name": "invoice_number", "label": "Rechnungsnummer", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 2, "fields": {"name": "invoice_date", "label": "Rechnungsdatum", "default": "", "lookup": "", "required": true}},
-  {"model": "metadata.metadatatype", "pk": 3, "fields": {"name": "due_date", "label": "Fällig am", "default": "", "lookup": "{{ document.metadata_value_of.invoice_date|add_days:30 }}", "required": true}},
-  {"model": "metadata.metadatatype", "pk": 4, "fields": {"name": "linked_reference", "label": "Verknüpfte Referenz (Rechnung, E-Mail, etc.)", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1, "fields": {"name": "invoice_number", "label": "Rechnungsnummer", "default": "", "lookup": "", "required": true}},
-  {"model": "metadata.metadatatype", "pk": 2, "fields": {"name": "invoice_date", "label": "Rechnungsdatum", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 3, "fields": {"name": "service_date", "label": "Leistungsdatum", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 4, "fields": {"name": "amount_total", "label": "Rechnungsbetrag brutto", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 5, "fields": {"name": "currency", "label": "Währung", "default": "EUR", "lookup": "", "required": true}},
@@ -25,7 +21,7 @@
   {"model": "metadata.metadatatype", "pk": 20, "fields": {"name": "delivery_date", "label": "Zustelldatum", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 21, "fields": {"name": "carrier", "label": "Versender / Paketdienst", "default": "DHL", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 22, "fields": {"name": "tracking_number", "label": "Sendungsnummer(n)", "default": "", "lookup": "", "required": true}},
-  {"model": "metadata.metadatatype", "pk": 23, "fields": {"name": "tracking_url", "label": "Tracking-Link (automatisch)", "default": "", "lookup": "{% if value|slice:':2'|upper == 'JJ' %}https://nolp.dhl.de/...{{ value }}{% elif valu$
+  {"model": "metadata.metadatatype", "pk": 23, "fields": {"name": "tracking_url", "label": "Tracking-Link (automatisch)", "default": "", "lookup": "{% if value|slice:':2'|upper == 'JJ' %}https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc={{ value }}{% elif value|first|upper == '1' and 'Z' in value|upper %}https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums={{ value }}{% elif value|slice:':4' == '0150' %}https://tracking.dpd.de/parcel/{{ value }}{% elif value|length >= 14 and value|slice:':1'|upper == 'J' %}https://www.hermesworld.com/de/shipment-tracking/?trackId={{ value }}{% elif value|slice:':3'|upper == 'GLS' %}https://gls-group.eu/DE/de/paket-verfolgen?match={{ value }}{% else %}https://www.google.com/search?q={{ value }}+sendungsverfolgung{% endif %}", "required": false}},
   {"model": "metadata.metadatatype", "pk": 24, "fields": {"name": "number_of_packages", "label": "Anzahl Pakete", "default": "1", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 25, "fields": {"name": "delivery_status", "label": "Lieferstatus", "default": "Unterwegs", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 26, "fields": {"name": "contract_type", "label": "Vertragstyp", "default": "", "lookup": "", "required": true}},
@@ -34,12 +30,12 @@
   {"model": "metadata.metadatatype", "pk": 29, "fields": {"name": "start_date", "label": "Beginn der Vertragslaufzeit", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 30, "fields": {"name": "end_date", "label": "Ende der Vertragslaufzeit", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 31, "fields": {"name": "notice_period_months", "label": "Kündigungsfrist (Monate)", "default": "3", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 32, "fields": {"name": "next_cancellation_date", "label": "Nächstmögliches Kündigungsdatum (auto)", "default": "", "lookup": "{% if document.metadata_value_of.end_date %}{{ document.metadata$
+  {"model": "metadata.metadatatype", "pk": 32, "fields": {"name": "next_cancellation_date", "label": "Nächstmögliches Kündigungsdatum (auto)", "default": "", "lookup": "{% if document.metadata_value_of.end_date %}{{ document.metadata_value_of.end_date|add_days:-90 }}{% else %}{% with notice=document.metadata_value_of.notice_period_months|default:3 %}{{ document.metadata_value_of.start_date|add_months:notice|add_days:-30 }}{% endwith %}{% endif %}", "required": false}},
   {"model": "metadata.metadatatype", "pk": 33, "fields": {"name": "linked_reference", "label": "Verknüpfte Referenz (Rechnung, E-Mail, etc.)", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 34, "fields": {"name": "case_number", "label": "Aktenzeichen", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 35, "fields": {"name": "authority", "label": "Behörde / Gericht", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 36, "fields": {"name": "received_date", "label": "Zugang bei uns", "default": "", "lookup": "", "required": true}},
-  {"model": "metadata.metadatatype", "pk": 37, "fields": {"name": "deadline_date", "label": "Fristablauf (auto)", "default": "", "lookup": "{% if document.metadata_value_of.deadline_type %}{% for t in document.metadata_value_of.deadl$
+  {"model": "metadata.metadatatype", "pk": 37, "fields": {"name": "deadline_date", "label": "Fristablauf (auto)", "default": "", "lookup": "{% if document.metadata_value_of.deadline_type %}{% for type in document.metadata_value_of.deadline_type %}{% if 'Widerspruch' in type or 'Einspruch' in type %}{{ document.metadata_value_of.received_date|add_days:30 }}{% elif 'Klage' in type or 'Berufung' in type %}{{ document.metadata_value_of.received_date|add_months:1 }}{% elif 'Begründung' in type %}{{ document.metadata_value_of.received_date|add_months:2 }}{% elif 'Zahlungsfrist' in type %}{{ document.metadata_value_of.received_date|add_days:14 }}{% else %}{{ document.metadata_value_of.received_date|add_days:30 }}{% endif %}{% endfor %}{% else %}{{ document.metadata_value_of.received_date|add_days:30 }}{% endif %}", "required": false}},
   {"model": "metadata.metadatatype", "pk": 38, "fields": {"name": "patient", "label": "Patient / Person", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 39, "fields": {"name": "health_insurance", "label": "Krankenkasse", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 40, "fields": {"name": "document_kind", "label": "Dokumentart", "default": "", "lookup": "", "required": true}},
@@ -52,30 +48,23 @@
   {"model": "metadata.metadatatype", "pk": 47, "fields": {"name": "statement_period", "label": "Zeitraum", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 48, "fields": {"name": "photo_event", "label": "Ereignis / Album", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 49, "fields": {"name": "linked_reference", "label": "Verknüpfte Referenz", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 999, "fields": {"name": "external_references", "label": "Externe IDs aus anderen DMS (DATEV, ecoDMS, Lexoffice, SevDesk …)", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 999, "fields": {"name": "external_references", "label": "Externe IDs aus anderen DMS (DATEV, ecoDMS, Lexoffice …)", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk": 1000, "fields": {"name": "retention_date", "label": "Aufbewahrungsfrist endet am (automatisch)", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1001, "fields": {"name": "external_references", "label": "Externe IDs aus anderen DMS (DATEV, ecoDMS, Lexoffice …)", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk": 1002, "fields": {"name": "legal_hold_until", "label": "Rechtssperre aktiv bis (berechtigtes Interesse)", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1100, "fields": {"name": "consent_given_until", "label": "Veröffentlichungsfreigabe gültig bis", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1101, "fields": {"name": "consent_withdrawn", "label": "Freigabe widerrufen am", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1102, "fields": {"name": "feedback_reference", "label": "Zugehörige Rechnungsnummer + Datum", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1200, "fields": {"name": "consent_given_until", "label": "Veröffentlichungsfreigabe gültig bis", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1201, "fields": {"name": "consent_withdrawn", "label": "Freigabe widerrufen am", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1202, "fields": {"name": "anonymized_at", "label": "Anonymisiert am", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1203, "fields": {"name": "internal_note", "label": "Interne Notiz (nicht sichtbar für normale Benutzer)", "default": "", "lookup": "", "required": false}},
-  // research_report
   {"model": "metadata.metadatatype", "pk": 1500, "fields": {"name": "report_date", "label": "Berichtsdatum", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1501, "fields": {"name": "report_responsible", "label": "Verantwortlicher Prüfer", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1502, "fields": {"name": "related_product", "label": "Zugehöriges Produkt", "default": "", "lookup": "", "required": false}},
-  // media_contract
   {"model": "metadata.metadatatype", "pk": 1510, "fields": {"name": "model_name", "label": "Model / Künstler", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1511, "fields": {"name": "ksk_required", "label": "Künstlersozialkasse pflichtig", "default": "Nein", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1512, "fields": {"name": "ksk_paid_until", "label": "KSK bezahlt bis", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1513, "fields": {"name": "media_release_until", "label": "Medienfreigabe gültig bis", "default": "", "lookup": "", "required": false}},
-  // script_data
   {"model": "metadata.metadatatype", "pk": 1520, "fields": {"name": "script_version", "label": "Skript-Version", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1521, "fields": {"name": "script_author", "label": "Skript-Ersteller", "default": "", "lookup": "", "required": true}},  
-  // academic_record (9 Felder)
+  {"model": "metadata.metadatatype", "pk": 1521, "fields": {"name": "script_author", "label": "Skript-Ersteller", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1400, "fields": {"name": "academic_type", "label": "Art der Arbeit", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1401, "fields": {"name": "academic_institution", "label": "Hochschule / Einrichtung", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1402, "fields": {"name": "academic_grade", "label": "Note / Bewertung", "default": "", "lookup": "", "required": false}},
@@ -87,7 +76,6 @@
   {"model": "metadata.metadatatype", "pk": 1408, "fields": {"name": "academic_feedback", "label": "Feedback / Gutachten / E-Mails", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk": 1600, "fields": {"name": "sync_status", "label": "Abgleich-Status (Shopify/DATEV/WooCommerce)", "default": "manuell", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1601, "fields": {"name": "zugferd_extracted", "label": "ZUGFeRD XML extrahiert (Ja/Nein + geparste Daten)", "default": "Nein", "lookup": "", "required": false}},
-  // customer_project
   {"model": "metadata.metadatatype", "pk": 1700, "fields": {"name": "project_number", "label": "Projektnummer", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1701, "fields": {"name": "project_customer", "label": "Kunde", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1702, "fields": {"name": "project_manager", "label": "Projektleiter", "default": "", "lookup": "", "required": true}},
@@ -95,7 +83,6 @@
   {"model": "metadata.metadatatype", "pk": 1704, "fields": {"name": "project_end", "label": "Projektende", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1705, "fields": {"name": "project_status", "label": "Status", "default": "Offen", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1706, "fields": {"name": "project_retention_note", "label": "Löschhinweis (Einzelfall)", "default": "", "lookup": "", "required": false}},
-  // software_license
   {"model": "metadata.metadatatype", "pk": 1800, "fields": {"name": "license_software", "label": "Software", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1801, "fields": {"name": "license_type", "label": "Lizenzart", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1802, "fields": {"name": "license_key", "label": "Lizenzschlüssel", "default": "", "lookup": "", "required": false, "multiple": true}},
