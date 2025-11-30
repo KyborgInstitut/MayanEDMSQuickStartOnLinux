@@ -38,5 +38,6 @@
       "user": null,
       "public": true
     }
-  }
+  },
+    {"model": "search.savedsearch", "pk": 20, "fields": {"label": "Zollrelevante Dokumente", "query": "tag:Zollrelevant OR metadata__customs_mrn:* OR metadata__eur1_number:*", "public": true}}
 ]
