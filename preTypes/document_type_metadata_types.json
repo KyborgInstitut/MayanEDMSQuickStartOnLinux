@@ -122,5 +122,18 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3101, "required": false}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3102, "required": false}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3103, "required": false}},
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3104, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["invoice","financial_statement","tax_return","payroll","contract"], "metadata_type": 3104, "required": false}},
+
+  // Marketing
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4000, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4001, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4002, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4003, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4004, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4005, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4006, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4007, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4008, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4009, "required": false}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["marketing_campaign"], "metadata_type": 4010, "required": false}}
 ]
