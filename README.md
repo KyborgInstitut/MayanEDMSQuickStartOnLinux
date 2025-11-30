@@ -72,8 +72,14 @@ mayan-edms.py loaddata dashboard_widgets.json
 After importing all json files, clear the cash of mayan!
 
 ~~~bash
-# Cache leeren – sonst sehen Sie die Änderungen nicht sofort
+# Cache leeren (sonst sehen Sie manche Änderungen nicht sofort)
 mayan-edms.py clear_cache
+
+# Indizes neu aufbauen (wegen "index": true)
+mayan-edms.py rebuild_search_indexes
+
+# Optional: Alles nochmal neu indizieren (bei großen Datenmengen)
+mayan-edms.py index_documents --all
 
 # Optional: Browser-Cache leeren oder Inkognito-Modus
 ~~~
