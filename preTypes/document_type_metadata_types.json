@@ -98,5 +98,13 @@
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["own_product"], "metadata_type": 2102, "required": true}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["own_product"], "metadata_type": 2103, "required": false}},
   {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["own_product"], "metadata_type": 2104, "required": false}},
-  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["own_product"], "metadata_type": 2105, "required": false}}
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["own_product"], "metadata_type": 2105, "required": false}},
+
+  // ITSec
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2200, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2201, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2202, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2203, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2204, "required": true}},
+  {"model": "documents.documenttypemetadatatype", "fields": {"document_type": ["pentest_report"], "metadata_type": 2205, "required": false}}
 ]
