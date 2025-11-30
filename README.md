@@ -31,11 +31,12 @@ Make sure to give the installation process some time, around 5-10 Minutes after 
 that everything is running and you can login, into the Webinterface of Mayan EDMS.
 
 ## Recommended System
-At least 512GB Space or more, depending on your needs. 
-SSDs for budget or NVMe for speed. HDD is possible as well but could slow it further down.
-6 Core CPU (VM)
-12-16GB RAM (dedicated for the VM)
-OS: [Ubuntu 24.04 LTS](https://ubuntu.com/download/server)
+
+* At least 512GB Space or more, depending on your needs. 
+* SSDs for budget or NVMe for speed. HDD is possible as well but could slow it further down.
+* 6 Core CPU (VM)
+* 12-16GB RAM (dedicated for the VM)
+* OS: [Ubuntu 24.04 LTS](https://ubuntu.com/download/server)
 
 Virtualisation Host is [Proxmox](https://www.proxmox.com/en/downloads)
 
