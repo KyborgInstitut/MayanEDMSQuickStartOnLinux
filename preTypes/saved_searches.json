@@ -1,0 +1,6 @@
+[
+  {"model": "search.savedsearch", "pk": 1, "fields": {"label": "Wirklich löschbare Dokumente (ohne Rechtssperre)", "query": "tag:retention_expired -tag:legal_hold_active", "user": null, "public": true}},
+  {"model": "search.savedsearch", "pk": 2, "fields": {"label": "Rechtssperre aktiv – NICHT löschen", "query": "tag:legal_hold_active", "user": null, "public": true}},
+  {"model": "search.savedsearch", "pk": 10, "fields": {"label": "Aktive Veröffentlichungsfreigaben", "query": "tag:Veröffentlichungsfreigabe aktiv -tag:Freigabe widerrufen", "public": true}},
+  {"model": "search.savedsearch", "pk": 11, "fields": {"label": "Widerrufene Freigaben – zu anonymisieren", "query": "tag:Freigabe widerrufen -tag:Anonymisiert", "public": true}}
+]
