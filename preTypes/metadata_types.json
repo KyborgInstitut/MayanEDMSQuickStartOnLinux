@@ -87,5 +87,10 @@
   {"model": "metadata.metadatatype", "pk": 1801, "fields": {"name": "license_type", "label": "Lizenzart", "default": "", "lookup": "", "required": true}},
   {"model": "metadata.metadatatype", "pk": 1802, "fields": {"name": "license_key", "label": "Lizenzschlüssel", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk": 1803, "fields": {"name": "license_valid_until", "label": "Gültig bis", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 1804, "fields": {"name": "license_autorenew", "label": "Automatische Verlängerung", "default": "Ja", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk": 1804, "fields": {"name": "license_autorenew", "label": "Automatische Verlängerung", "default": "Ja", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 1900, "fields": {"name": "customs_mrn", "label": "MRN (Movement Reference Number)", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 1901, "fields": {"name": "eur1_number", "label": "EUR.1 / Ursprungsnachweis Nummer", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 1902, "fields": {"name": "customs_certificate_link", "label": "Link zu CE/Zollbescheid (PDF, E-Mail etc.)", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 1903, "fields": {"name": "customs_pod_link", "label": "Zoll-POD / Zustellnachweis", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 1904, "fields": {"name": "customs_status", "label": "Zollstatus", "default": "Offen", "lookup": "", "required": false}}
 ]
