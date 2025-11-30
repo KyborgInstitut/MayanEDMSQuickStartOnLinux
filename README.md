@@ -46,27 +46,33 @@ After a clean installation, mayan EDMS is totally empty. You can define all Data
 
 Importing those predefined types and metadata, you need to follow the exact same order as followed in the terminal (ssh) access on the VM Server of your mayan instanz:
 
+Get the name of your docker container of mayan inside the VM
+
 ~~~bash
-# 1. Dokumententypen (müssen zuerst da sein)
-mayan-edms.py loaddata document_types.json
+docker ps
+~~~
 
-# 2. Metadatenfelder
-mayan-edms.py loaddata metadata_types.json
+insert all the documents for example in your home directory
+and than execute the following (make shure, to update the path to the directory including all the json files and the path to the direct docker container:
 
-# 3. Zuordnung Dokumententyp ↔ Metadatenfelder
-mayan-edms.py loaddata document_type_metadata_types.json
+~~~bash
+# 1. JSON-Dateien in den Container kopieren
+docker cp /home/tobias/import/. mayan-mayan_app-1:/tmp/import/
 
-# 4. Tags
-mayan-edms.py loaddata tags.json
+# 2. Jetzt alle Dateien importieren (Reihenfolge ist wichtig!)
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/document_types.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/metadata_types.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/document_type_metadata_types.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/tags.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/workflows.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/saved_searches.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/dashboard_widgets.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/cabinets.json
+docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/users.json
 
-# 5. Workflows (benutzen Tags + Metadaten)
-mayan-edms.py loaddata workflows.json
-
-# 6. Saved Searches (benutzen Tags + Cabinets)
-mayan-edms.py loaddata saved_searches.json
-
-# 7. Dashboard-Widgets (benutzen Saved Searches)
-mayan-edms.py loaddata dashboard_widgets.json
+# 3. Abschluss
+docker exec -it mayan-mayan_app-1 mayan-edms.py clear_cache
+docker exec -it mayan-mayan_app-1 mayan-edms.py rebuild_search_indexes
 ~~~
 
 After importing all json files, clear the cash of mayan!
