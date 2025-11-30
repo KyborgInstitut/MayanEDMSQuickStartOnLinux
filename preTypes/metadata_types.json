@@ -142,5 +142,14 @@
   {"model": "metadata.metadatatype", "pk":4009, "fields": {"name": "campaign_statistics_link", "label": "Statistik-Link", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk":4010, "fields": {"name": "campaign_legal_note", "label": "Rechtliche Hinweise", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 1, "fields": {"name": "invoice_number", "label": "Rechnungsnummer", "default": "", "lookup": "", "required": true, "index": true}},
-  {"model": "metadata.metadatatype", "pk": 2, "fields": {"name": "invoice_date", "label": "Rechnungsdatum", "default": "", "lookup": "", "required": true, "index": true}}
+  {"model": "metadata.metadatatype", "pk": 2, "fields": {"name": "invoice_date", "label": "Rechnungsdatum", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 1404, "fields": {"name": "submission_date", "label": "Abgabedatum", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 1500, "fields": {"name": "report_date", "label": "Berichtsdatum", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 4006, "fields": {"name": "campaign_start", "label": "Startdatum", "default": "", "lookup": "", "required": true, "index": true}},
+  // Ergänzung für ähnliche Felder (optimieren Sie diese ebenfalls)
+  {"model": "metadata.metadatatype", "pk": 2203, "fields": {"name": "pentest_date", "label": "Testdatum", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 2300, "fields": {"name": "breach_date", "label": "Datum des Vorfalls", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 1703, "fields": {"name": "project_start", "label": "Projektstart", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 2, "fields": {"name": "invoice_date", "label": "Rechnungsdatum", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 9, "fields": {"name": "due_date", "label": "Fällig am", "default": "", "lookup": "{{ document.metadata_value_of.invoice_date|add_days:30 }}", "required": true, "index": true}}
 ]
