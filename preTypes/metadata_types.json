@@ -110,5 +110,11 @@
   {"model": "metadata.metadatatype", "pk": 2103, "fields": {"name": "product_components", "label": "Komponenten / Zulieferer", "default": "", "lookup": "", "required": false, "multiple": true}},
   {"model": "metadata.metadatatype", "pk": 2104, "fields": {"name": "product_valid_supplier_certificate", "label": "Gültiger Lieferantennachweis (auto)", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk": 2105, "fields": {"name": "product_show_expired_certificates", "label": "Abgelaufene Nachweise anzeigen", "default": "Nein", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 3000, "fields": {"name": "company_address", "label": "Unsere Firmenanschrift (zentral)", "default": "Musterfirma GmbH\nMusterstraße 1\n12345 Musterstadt\nDeutschland\nUSt-ID: DE123456789", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk": 3000, "fields": {"name": "company_address", "label": "Unsere Firmenanschrift (zentral)", "default": "Musterfirma GmbH\nMusterstraße 1\n12345 Musterstadt\nDeutschland\nUSt-ID: DE123456789", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 2200, "fields": {"name": "pentest_client", "label": "Auftraggeber / eigenes Unternehmen", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2201, "fields": {"name": "pentest_scope", "label": "Testumfang / Scope", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2202, "fields": {"name": "pentest_tester", "label": "Durchführender", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2203, "fields": {"name": "pentest_date", "label": "Testdatum", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2204, "fields": {"name": "pentest_risk_level", "label": "Höchstes Risiko", "default": "Critical", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 2205, "fields": {"name": "pentest_related_case", "label": "Verknüpfter Rechtsfall", "default": "", "lookup": "", "required": false}}
 ]
