@@ -9,5 +9,6 @@
   {"model": "tags.tag", "pk": 110, "fields": {"label": "Veröffentlichungsfreigabe aktiv", "color": "green"}},
   {"model": "tags.tag", "pk": 111, "fields": {"label": "Freigabe widerrufen", "color": "darkred"}},
   {"model": "tags.tag", "pk": 112, "fields": {"label": "Anonymisiert", "color": "gray"}},
-  {"model": "tags.tag", "pk": 113, "fields": {"label": "Migration komplett", "color": "lightblue"}}
+  {"model": "tags.tag", "pk": 113, "fields": {"label": "Migration komplett", "color": "lightblue"}},
+  {"model": "tags.tag", "pk": 120, "fields": {"label": "Zollrelevant", "color": "darkblue"}}
 ]
