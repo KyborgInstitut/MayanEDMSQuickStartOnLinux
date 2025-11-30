@@ -140,5 +140,7 @@
   {"model": "metadata.metadatatype", "pk":4007, "fields": {"name": "campaign_end", "label": "Enddatum", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk":4008, "fields": {"name": "campaign_roi", "label": "ROI / Umsatz", "default": "", "lookup": "", "required": false}},
   {"model": "metadata.metadatatype", "pk":4009, "fields": {"name": "campaign_statistics_link", "label": "Statistik-Link", "default": "", "lookup": "", "required": false, "multiple": true}},
-  {"model": "metadata.metadatatype", "pk":4010, "fields": {"name": "campaign_legal_note", "label": "Rechtliche Hinweise", "default": "", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk":4010, "fields": {"name": "campaign_legal_note", "label": "Rechtliche Hinweise", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 1, "fields": {"name": "invoice_number", "label": "Rechnungsnummer", "default": "", "lookup": "", "required": true, "index": true}},
+  {"model": "metadata.metadatatype", "pk": 2, "fields": {"name": "invoice_date", "label": "Rechnungsdatum", "default": "", "lookup": "", "required": true, "index": true}}
 ]
