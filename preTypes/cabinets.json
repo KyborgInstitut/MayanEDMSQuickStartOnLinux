@@ -1,0 +1,5 @@
+[
+  {"model": "cabinets.cabinet", "pk": 10, "fields": {"label": "Gesellschaft"}},
+  {"model": "cabinets.cabinet", "pk": 11, "fields": {"label": "Datenschutz"}},
+  {"model": "cabinets.cabinet", "pk": 12, "fields": {"label": "Versicherungen"}}
+]
