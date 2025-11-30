@@ -129,5 +129,16 @@
   {"model": "metadata.metadatatype", "pk": 3101, "fields": {"name": "buchungsmonat", "label": "Buchungsmonat (auto)", "default": "", "lookup": "{{ document.metadata_value_of.invoice_date|date:'m' }}", "required": false}},
   {"model": "metadata.metadatatype", "pk": 3102, "fields": {"name": "buchungsquartal", "label": "Buchungsquartal (auto)", "default": "", "lookup": "{% with monat=document.metadata_value_of.invoice_date|date:'m'|int %}{% if monat <= 3 %}Q1{% elif monat <= 6 %}Q2{% elif monat <= 9 %}Q3{% else %}Q4{% endif %}{% endwith %}", "required": false}},
   {"model": "metadata.metadatatype", "pk": 3103, "fields": {"name": "kunde", "label": "Kunde / Auftraggeber", "default": "", "lookup": "", "required": false}},
-  {"model": "metadata.metadatatype", "pk": 3104, "fields": {"name": "datenquelle", "label": "Datenquelle (Shopify, DATEV etc.)", "default": "", "lookup": "", "required": false}}
+  {"model": "metadata.metadatatype", "pk": 3104, "fields": {"name": "datenquelle", "label": "Datenquelle (Shopify, DATEV etc.)", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 4000, "fields": {"name": "campaign_name", "label": "Kampagnenname", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 4001, "fields": {"name": "campaign_channel", "label": "Kanal", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 4002, "fields": {"name": "campaign_target_market", "label": "Zielmarkt", "default": "", "lookup862": "", "required": true, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 4003, "fields": {"name": "campaign_persona", "label": "Persona / Zielgruppe", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 4004, "fields": {"name": "campaign_agency", "label": "Agentur / Dienstleister", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 4005, "fields": {"name": "campaign_budget", "label": "Budget (EUR)", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 4006, "fields": {"name": "campaign_start", "label": "Startdatum", "default": "", "lookup": "", "required": true}},
+  {"model": "metadata.metadatatype", "pk": 4007, "fields": {"name": "campaign_end", "label": "Enddatum", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 4008, "fields": {"name": "campaign_roi", "label": "ROI / Umsatz", "default": "", "lookup": "", "required": false}},
+  {"model": "metadata.metadatatype", "pk": 4009, "fields": {"name": "campaign_statistics_link", "label": "Statistik-Link", "default": "", "lookup": "", "required": false, "multiple": true}},
+  {"model": "metadata.metadatatype", "pk": 4010, "fields": {"name": "campaign_legal_note", "label": "Rechtliche Hinweise", "default": "", "lookup": "", "required": false}}
 ]
