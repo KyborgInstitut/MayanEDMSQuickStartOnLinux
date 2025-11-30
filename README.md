@@ -47,25 +47,25 @@ After a clean installation, mayan EDMS is totally empty. You can define all Data
 Importing those predefined types and metadata, you need to follow the exact same order as followed in the terminal (ssh) access on the VM Server of your mayan instanz:
 
 ~~~bash
-# 1. Dokumententypen (müssen zuerst existieren)
+# 1. Dokumententypen (müssen zuerst da sein)
 mayan-edms.py loaddata document_types.json
 
-# 2. Metadatenfelder (müssen existieren, bevor sie zugeordnet werden)
+# 2. Metadatenfelder
 mayan-edms.py loaddata metadata_types.json
 
-# 3. Zuordnung Metadaten → Dokumententypen + Pflichtfelder
+# 3. Zuordnung Dokumententyp ↔ Metadatenfelder
 mayan-edms.py loaddata document_type_metadata_types.json
 
-# 4. Tags (farbig, für Übersicht)
+# 4. Tags
 mayan-edms.py loaddata tags.json
 
-# 5. Workflows (Fristen, Rechtssperre, Verknüpfung, Feedback-Widerruf etc.)
+# 5. Workflows (benutzen Tags + Metadaten)
 mayan-edms.py loaddata workflows.json
 
-# 6. Saved Searches (Ihre To-do-Listen + Löschprüfung)
+# 6. Saved Searches (benutzen Tags + Cabinets)
 mayan-edms.py loaddata saved_searches.json
 
-# 7. Dashboard-Widgets (Ihr Cockpit)
+# 7. Dashboard-Widgets (benutzen Saved Searches)
 mayan-edms.py loaddata dashboard_widgets.json
 ~~~
 
@@ -83,13 +83,17 @@ It is explicitly an aditional prozess!
 
 Source of the example file:
 ~~~bash
-/preTypes/users.json
+# 8. Cabinets (optional, aber empfohlen vor Users)
+mayan-edms.py loaddata cabinets.json
+
+# 9. Benutzer + Rollen + Cabinet-Rechte
+mayan-edms.py loaddata users.json
 ~~~
 
 Importing with the following commands inside the terminal on the VM Server:
 
 ~~~bash
-mayan-edms.py loaddata users.json
+// mayan-edms.py loaddata users.json
 mayan-edms.py createsuperuser        # root-Passwort setzen
 mayan-edms.py changepassword steuerpruefung_2025
 mayan-edms.py changepassword steuerberater
