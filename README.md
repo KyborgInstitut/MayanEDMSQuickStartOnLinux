@@ -77,4 +77,21 @@ mayan-edms.py clear_cache
 
 # Optional: Browser-Cache leeren oder Inkognito-Modus
 ~~~
+## Optional import of User List
+Depending of the size of your needs, here is a default list of different user and roles as well as "cabinets" to get startet.
+It is explicitly an aditional prozess!
+
+Source of the example file:
+~~~bash
+/preTypes/users.json
+~~~
+
+Importing with the following commands inside the terminal on the VM Server:
+
+~~~bash
+mayan-edms.py loaddata users.json
+mayan-edms.py createsuperuser        # root-Passwort setzen
+mayan-edms.py changepassword steuerpruefung_2025
+mayan-edms.py changepassword steuerberater
+~~~
 
