@@ -1,11 +1,26 @@
 # MayanEDMSQuickStartOnLinux
-Quick Installation Script to get startet quickly with Mayan EDMS in Linux Ubuntu Server *24.04 LTS) with individual P\password in a local network (not a public available one!!!)! Data and Database are directed to the Host, separated from docker!
+Quick Installation Script to get started quickly with Mayan EDMS in Linux Ubuntu Server *24.04 LTS) with individual P\password in a local network (not a public available one!!!)!
+Data and Database are directed to the Host, separated from docker!
 
 [Project DOCs](https://docs.mayan-edms.com/chapters/features.html) of Mayan EDMS.
 
-In my experience, the installation wasn't that smooth using the standard installation process, even it is the basis of my personal script.
+In my experience, the installation wasn't that smooth using the standard installation process, even it is the foundation of my personal script.
 
 The script has been developed using [grok.com](https://grok.com)
+
+## !!! ATTENTION !!!
+Project Progress:
+* ✅ Install.sh - only local usage, no https (not available in regular/default local networks - but possible)!!!
+* ❌ Default Datastructure import (you can set up your own, using the Webbrowser, one by one, as System default)
+  * ✅ cabinets.json
+  * ❌ document_types.json
+  * ❌ document_type_metadata_types.json
+  * ❌ saved_searches.json
+  * ❌ tags.json
+  * ❌ users.json
+  * ❌ workflows.json
+  * ❌ dashboard_widgets.json
+
 
 ## Copy files to your server
 
