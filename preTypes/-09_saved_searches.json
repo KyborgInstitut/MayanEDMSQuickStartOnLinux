@@ -1,0 +1,45 @@
+[
+  {"model": "dynamic_search.savedsearchresult", "pk": 1, "fields": {"name": "Offene Eingangsrechnungen", "query": "{\"document_type__label\": \"Eingangsrechnung\", \"tag__label\": \"Unbezahlt\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 2, "fields": {"name": "Überfällige Rechnungen", "query": "{\"tag__label\": \"Überfällig\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 3, "fields": {"name": "Skonto noch möglich", "query": "{\"tag__label\": \"Skonto möglich\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 4, "fields": {"name": "Rechnungen ohne Buchung", "query": "{\"document_type__label__icontains\": \"rechnung\", \"tag__label\": \"Kontierung prüfen\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 5, "fields": {"name": "ZUGFeRD-Rechnungen", "query": "{\"tag__label\": \"ZUGFeRD vorhanden\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 10, "fields": {"name": "Verträge - Kündigung prüfen", "query": "{\"tag__label\": \"Kündigung prüfen\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 11, "fields": {"name": "Verträge - Aktiv", "query": "{\"tag__label\": \"Vertrag aktiv\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 12, "fields": {"name": "AV-Verträge (DSGVO)", "query": "{\"document_type__label\": \"AV-Vertrag (Auftragsverarbeitung DSGVO)\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 20, "fields": {"name": "DSGVO - Auskunft ausstehend", "query": "{\"tag__label\": \"Auskunft ausstehend\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 21, "fields": {"name": "DSGVO - Löschung durchzuführen", "query": "{\"document_type__label\": \"DSGVO-Löschantrag\", \"tag__label__ne\": \"Löschung durchgeführt\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 22, "fields": {"name": "Datenschutzvorfälle", "query": "{\"document_type__label\": \"Datenschutzvorfall-Meldung\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 23, "fields": {"name": "Einwilligungen widerrufen", "query": "{\"tag__label\": \"Einwilligung widerrufen\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 30, "fields": {"name": "GoBD - Löschbare Dokumente", "query": "{\"tag__label\": \"Löschbar\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 31, "fields": {"name": "GoBD - Rechtssperre aktiv", "query": "{\"tag__label\": \"Rechtssperre aktiv\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 32, "fields": {"name": "GoBD - Aufbewahrung abgelaufen", "query": "{\"tag__label\": \"Aufbewahrung abgelaufen\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 33, "fields": {"name": "Steuerprüfung relevant", "query": "{\"tag__label\": \"Steuerprüfung relevant\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 40, "fields": {"name": "Shop - Offene Retouren", "query": "{\"tag__label\": \"Retoure offen\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 41, "fields": {"name": "Shop - Sync-Fehler", "query": "{\"tag__label\": \"Sync: Fehler\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 42, "fields": {"name": "Shopify Bestellungen", "query": "{\"tag__label\": \"Quelle: Shopify\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 43, "fields": {"name": "Amazon Bestellungen", "query": "{\"tag__label\": \"Quelle: Amazon\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 44, "fields": {"name": "OSS-pflichtige Verkäufe", "query": "{\"tag__label\": \"OSS-pflichtig\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 50, "fields": {"name": "Fristen - Kritisch (7 Tage)", "query": "{\"tag__label\": \"Frist kritisch\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 51, "fields": {"name": "Fristen - 30 Tage", "query": "{\"tag__label\": \"Frist 30 Tage\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 60, "fields": {"name": "Zollrelevante Dokumente", "query": "{\"tag__label\": \"Zollrelevant\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 61, "fields": {"name": "Präferenznachweis fehlt", "query": "{\"tag__label\": \"Präferenznachweis fehlt\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 70, "fields": {"name": "Lizenzen - Ablauf prüfen", "query": "{\"document_type__label\": \"Software-Lizenz\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 71, "fields": {"name": "Versicherungen", "query": "{\"document_type__label\": \"Versicherungspolice\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 80, "fields": {"name": "KSK-Meldung ausstehend", "query": "{\"tag__label\": \"KSK Meldung ausstehend\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 90, "fields": {"name": "Unterschrift erforderlich", "query": "{\"tag__label\": \"Unterschrift erforderlich\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 91, "fields": {"name": "Prüfung erforderlich", "query": "{\"tag__label\": \"Prüfung erforderlich\"}", "user": null}},
+  
+  {"model": "dynamic_search.savedsearchresult", "pk": 100, "fields": {"name": "Buchhaltung 2025", "query": "{\"tag__label\": \"2025\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 101, "fields": {"name": "GmbH Dokumente", "query": "{\"tag__label\": \"GmbH\"}", "user": null}},
+  {"model": "dynamic_search.savedsearchresult", "pk": 102, "fields": {"name": "Privat Dokumente", "query": "{\"tag__label\": \"Privat\"}", "user": null}}
+]

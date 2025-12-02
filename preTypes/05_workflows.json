@@ -1,0 +1,250 @@
+[
+  {
+    "model": "document_states.workflow",
+    "pk": 1,
+    "fields": {
+      "label": "Rechnungseingang",
+      "internal_name": "invoice_incoming"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 101, "fields": {"workflow": 1, "label": "Eingegangen", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 102, "fields": {"workflow": 1, "label": "OCR/ZUGFeRD Verarbeitung", "initial": false, "completion": 10}},
+  {"model": "document_states.workflowstate", "pk": 103, "fields": {"workflow": 1, "label": "Prüfung erforderlich", "initial": false, "completion": 20}},
+  {"model": "document_states.workflowstate", "pk": 104, "fields": {"workflow": 1, "label": "Freigabe angefordert", "initial": false, "completion": 40}},
+  {"model": "document_states.workflowstate", "pk": 105, "fields": {"workflow": 1, "label": "Freigegeben", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 106, "fields": {"workflow": 1, "label": "Zur Zahlung angewiesen", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 107, "fields": {"workflow": 1, "label": "Bezahlt", "initial": false, "completion": 90}},
+  {"model": "document_states.workflowstate", "pk": 108, "fields": {"workflow": 1, "label": "Archiviert", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 109, "fields": {"workflow": 1, "label": "Abgelehnt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 101, "fields": {"workflow": 1, "label": "Verarbeitung starten", "origin_state": 101, "destination_state": 102}},
+  {"model": "document_states.workflowtransition", "pk": 102, "fields": {"workflow": 1, "label": "Zur Prüfung", "origin_state": 102, "destination_state": 103}},
+  {"model": "document_states.workflowtransition", "pk": 103, "fields": {"workflow": 1, "label": "Freigabe anfordern", "origin_state": 103, "destination_state": 104}},
+  {"model": "document_states.workflowtransition", "pk": 104, "fields": {"workflow": 1, "label": "Freigeben", "origin_state": 104, "destination_state": 105}},
+  {"model": "document_states.workflowtransition", "pk": 105, "fields": {"workflow": 1, "label": "Ablehnen", "origin_state": 104, "destination_state": 109}},
+  {"model": "document_states.workflowtransition", "pk": 106, "fields": {"workflow": 1, "label": "Zur Zahlung", "origin_state": 105, "destination_state": 106}},
+  {"model": "document_states.workflowtransition", "pk": 107, "fields": {"workflow": 1, "label": "Zahlung erfolgt", "origin_state": 106, "destination_state": 107}},
+  {"model": "document_states.workflowtransition", "pk": 108, "fields": {"workflow": 1, "label": "Archivieren", "origin_state": 107, "destination_state": 108}},
+  {"model": "document_states.workflowtransition", "pk": 109, "fields": {"workflow": 1, "label": "Zurück zur Prüfung", "origin_state": 104, "destination_state": 103}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 2,
+    "fields": {
+      "label": "Rechnungsausgang",
+      "internal_name": "invoice_outgoing"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 201, "fields": {"workflow": 2, "label": "Erstellt", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 202, "fields": {"workflow": 2, "label": "Versendet", "initial": false, "completion": 30}},
+  {"model": "document_states.workflowstate", "pk": 203, "fields": {"workflow": 2, "label": "Zahlungserinnerung", "initial": false, "completion": 50}},
+  {"model": "document_states.workflowstate", "pk": 204, "fields": {"workflow": 2, "label": "1. Mahnung", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 205, "fields": {"workflow": 2, "label": "2. Mahnung", "initial": false, "completion": 70}},
+  {"model": "document_states.workflowstate", "pk": 206, "fields": {"workflow": 2, "label": "3. Mahnung / Inkasso", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 207, "fields": {"workflow": 2, "label": "Bezahlt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 208, "fields": {"workflow": 2, "label": "Storniert", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 209, "fields": {"workflow": 2, "label": "Uneinbringlich", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 201, "fields": {"workflow": 2, "label": "Versenden", "origin_state": 201, "destination_state": 202}},
+  {"model": "document_states.workflowtransition", "pk": 202, "fields": {"workflow": 2, "label": "Zahlungserinnerung senden", "origin_state": 202, "destination_state": 203}},
+  {"model": "document_states.workflowtransition", "pk": 203, "fields": {"workflow": 2, "label": "1. Mahnung senden", "origin_state": 203, "destination_state": 204}},
+  {"model": "document_states.workflowtransition", "pk": 204, "fields": {"workflow": 2, "label": "2. Mahnung senden", "origin_state": 204, "destination_state": 205}},
+  {"model": "document_states.workflowtransition", "pk": 205, "fields": {"workflow": 2, "label": "3. Mahnung / Inkasso", "origin_state": 205, "destination_state": 206}},
+  {"model": "document_states.workflowtransition", "pk": 206, "fields": {"workflow": 2, "label": "Zahlung erhalten", "origin_state": 202, "destination_state": 207}},
+  {"model": "document_states.workflowtransition", "pk": 207, "fields": {"workflow": 2, "label": "Zahlung erhalten", "origin_state": 203, "destination_state": 207}},
+  {"model": "document_states.workflowtransition", "pk": 208, "fields": {"workflow": 2, "label": "Zahlung erhalten", "origin_state": 204, "destination_state": 207}},
+  {"model": "document_states.workflowtransition", "pk": 209, "fields": {"workflow": 2, "label": "Zahlung erhalten", "origin_state": 205, "destination_state": 207}},
+  {"model": "document_states.workflowtransition", "pk": 210, "fields": {"workflow": 2, "label": "Zahlung erhalten", "origin_state": 206, "destination_state": 207}},
+  {"model": "document_states.workflowtransition", "pk": 211, "fields": {"workflow": 2, "label": "Stornieren", "origin_state": 201, "destination_state": 208}},
+  {"model": "document_states.workflowtransition", "pk": 212, "fields": {"workflow": 2, "label": "Als uneinbringlich markieren", "origin_state": 206, "destination_state": 209}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 3,
+    "fields": {
+      "label": "DSGVO-Auskunftsersuchen",
+      "internal_name": "gdpr_data_request"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 301, "fields": {"workflow": 3, "label": "Antrag eingegangen", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 302, "fields": {"workflow": 3, "label": "Identität prüfen", "initial": false, "completion": 10}},
+  {"model": "document_states.workflowstate", "pk": 303, "fields": {"workflow": 3, "label": "Daten sammeln", "initial": false, "completion": 30}},
+  {"model": "document_states.workflowstate", "pk": 304, "fields": {"workflow": 3, "label": "Prüfung durch DSB", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 305, "fields": {"workflow": 3, "label": "Antwort erstellt", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 306, "fields": {"workflow": 3, "label": "Auskunft erteilt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 307, "fields": {"workflow": 3, "label": "Frist verlängert", "initial": false, "completion": 40}},
+  {"model": "document_states.workflowstate", "pk": 308, "fields": {"workflow": 3, "label": "Abgelehnt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 301, "fields": {"workflow": 3, "label": "Identität prüfen", "origin_state": 301, "destination_state": 302}},
+  {"model": "document_states.workflowtransition", "pk": 302, "fields": {"workflow": 3, "label": "Identität bestätigt", "origin_state": 302, "destination_state": 303}},
+  {"model": "document_states.workflowtransition", "pk": 303, "fields": {"workflow": 3, "label": "Identität nicht bestätigt", "origin_state": 302, "destination_state": 308}},
+  {"model": "document_states.workflowtransition", "pk": 304, "fields": {"workflow": 3, "label": "Zur Prüfung", "origin_state": 303, "destination_state": 304}},
+  {"model": "document_states.workflowtransition", "pk": 305, "fields": {"workflow": 3, "label": "Frist verlängern (max. 90 Tage)", "origin_state": 303, "destination_state": 307}},
+  {"model": "document_states.workflowtransition", "pk": 306, "fields": {"workflow": 3, "label": "Weiter sammeln", "origin_state": 307, "destination_state": 303}},
+  {"model": "document_states.workflowtransition", "pk": 307, "fields": {"workflow": 3, "label": "Antwort erstellen", "origin_state": 304, "destination_state": 305}},
+  {"model": "document_states.workflowtransition", "pk": 308, "fields": {"workflow": 3, "label": "Auskunft erteilen", "origin_state": 305, "destination_state": 306}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 4,
+    "fields": {
+      "label": "DSGVO-Löschantrag",
+      "internal_name": "gdpr_deletion_request"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 401, "fields": {"workflow": 4, "label": "Antrag eingegangen", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 402, "fields": {"workflow": 4, "label": "Identität prüfen", "initial": false, "completion": 10}},
+  {"model": "document_states.workflowstate", "pk": 403, "fields": {"workflow": 4, "label": "Aufbewahrungspflicht prüfen", "initial": false, "completion": 30}},
+  {"model": "document_states.workflowstate", "pk": 404, "fields": {"workflow": 4, "label": "Teilweise Löschung möglich", "initial": false, "completion": 50}},
+  {"model": "document_states.workflowstate", "pk": 405, "fields": {"workflow": 4, "label": "Löschung durchgeführt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 406, "fields": {"workflow": 4, "label": "Löschung abgelehnt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 407, "fields": {"workflow": 4, "label": "Anonymisierung durchgeführt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 401, "fields": {"workflow": 4, "label": "Identität prüfen", "origin_state": 401, "destination_state": 402}},
+  {"model": "document_states.workflowtransition", "pk": 402, "fields": {"workflow": 4, "label": "Aufbewahrung prüfen", "origin_state": 402, "destination_state": 403}},
+  {"model": "document_states.workflowtransition", "pk": 403, "fields": {"workflow": 4, "label": "Vollständig löschbar", "origin_state": 403, "destination_state": 405}},
+  {"model": "document_states.workflowtransition", "pk": 404, "fields": {"workflow": 4, "label": "Teilweise löschbar", "origin_state": 403, "destination_state": 404}},
+  {"model": "document_states.workflowtransition", "pk": 405, "fields": {"workflow": 4, "label": "Aufbewahrungspflicht - Ablehnen", "origin_state": 403, "destination_state": 406}},
+  {"model": "document_states.workflowtransition", "pk": 406, "fields": {"workflow": 4, "label": "Teillöschung durchführen", "origin_state": 404, "destination_state": 405}},
+  {"model": "document_states.workflowtransition", "pk": 407, "fields": {"workflow": 4, "label": "Anonymisieren statt löschen", "origin_state": 404, "destination_state": 407}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 5,
+    "fields": {
+      "label": "Vertragsmanagement",
+      "internal_name": "contract_management"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 501, "fields": {"workflow": 5, "label": "Entwurf", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 502, "fields": {"workflow": 5, "label": "Interne Prüfung", "initial": false, "completion": 20}},
+  {"model": "document_states.workflowstate", "pk": 503, "fields": {"workflow": 5, "label": "Verhandlung", "initial": false, "completion": 40}},
+  {"model": "document_states.workflowstate", "pk": 504, "fields": {"workflow": 5, "label": "Unterschrift angefordert", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 505, "fields": {"workflow": 5, "label": "Aktiv", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 506, "fields": {"workflow": 5, "label": "Kündigung eingeleitet", "initial": false, "completion": 90}},
+  {"model": "document_states.workflowstate", "pk": 507, "fields": {"workflow": 5, "label": "Ausgelaufen", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 508, "fields": {"workflow": 5, "label": "Verworfen", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 501, "fields": {"workflow": 5, "label": "Zur Prüfung", "origin_state": 501, "destination_state": 502}},
+  {"model": "document_states.workflowtransition", "pk": 502, "fields": {"workflow": 5, "label": "In Verhandlung", "origin_state": 502, "destination_state": 503}},
+  {"model": "document_states.workflowtransition", "pk": 503, "fields": {"workflow": 5, "label": "Zur Unterschrift", "origin_state": 503, "destination_state": 504}},
+  {"model": "document_states.workflowtransition", "pk": 504, "fields": {"workflow": 5, "label": "Unterschrieben / Aktivieren", "origin_state": 504, "destination_state": 505}},
+  {"model": "document_states.workflowtransition", "pk": 505, "fields": {"workflow": 5, "label": "Kündigung einleiten", "origin_state": 505, "destination_state": 506}},
+  {"model": "document_states.workflowtransition", "pk": 506, "fields": {"workflow": 5, "label": "Vertrag beenden", "origin_state": 506, "destination_state": 507}},
+  {"model": "document_states.workflowtransition", "pk": 507, "fields": {"workflow": 5, "label": "Verwerfen", "origin_state": 501, "destination_state": 508}},
+  {"model": "document_states.workflowtransition", "pk": 508, "fields": {"workflow": 5, "label": "Verwerfen", "origin_state": 502, "destination_state": 508}},
+  {"model": "document_states.workflowtransition", "pk": 509, "fields": {"workflow": 5, "label": "Verwerfen", "origin_state": 503, "destination_state": 508}},
+  {"model": "document_states.workflowtransition", "pk": 510, "fields": {"workflow": 5, "label": "Zurück zum Entwurf", "origin_state": 502, "destination_state": 501}},
+  {"model": "document_states.workflowtransition", "pk": 511, "fields": {"workflow": 5, "label": "Automatisch verlängert", "origin_state": 505, "destination_state": 505}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 6,
+    "fields": {
+      "label": "Shop-Retoure",
+      "internal_name": "shop_return"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 601, "fields": {"workflow": 6, "label": "Retoure angemeldet", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 602, "fields": {"workflow": 6, "label": "Ware eingegangen", "initial": false, "completion": 30}},
+  {"model": "document_states.workflowstate", "pk": 603, "fields": {"workflow": 6, "label": "Prüfung", "initial": false, "completion": 50}},
+  {"model": "document_states.workflowstate", "pk": 604, "fields": {"workflow": 6, "label": "Erstattung genehmigt", "initial": false, "completion": 70}},
+  {"model": "document_states.workflowstate", "pk": 605, "fields": {"workflow": 6, "label": "Erstattung abgelehnt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 606, "fields": {"workflow": 6, "label": "Erstattet", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 607, "fields": {"workflow": 6, "label": "Umtausch erfolgt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 601, "fields": {"workflow": 6, "label": "Ware erhalten", "origin_state": 601, "destination_state": 602}},
+  {"model": "document_states.workflowtransition", "pk": 602, "fields": {"workflow": 6, "label": "Prüfen", "origin_state": 602, "destination_state": 603}},
+  {"model": "document_states.workflowtransition", "pk": 603, "fields": {"workflow": 6, "label": "Erstattung genehmigen", "origin_state": 603, "destination_state": 604}},
+  {"model": "document_states.workflowtransition", "pk": 604, "fields": {"workflow": 6, "label": "Erstattung ablehnen", "origin_state": 603, "destination_state": 605}},
+  {"model": "document_states.workflowtransition", "pk": 605, "fields": {"workflow": 6, "label": "Erstattung durchführen", "origin_state": 604, "destination_state": 606}},
+  {"model": "document_states.workflowtransition", "pk": 606, "fields": {"workflow": 6, "label": "Umtausch durchführen", "origin_state": 604, "destination_state": 607}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 7,
+    "fields": {
+      "label": "GoBD-Aufbewahrung",
+      "internal_name": "gobd_retention"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 701, "fields": {"workflow": 7, "label": "Erfasst", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 702, "fields": {"workflow": 7, "label": "GoBD-konform archiviert", "initial": false, "completion": 50}},
+  {"model": "document_states.workflowstate", "pk": 703, "fields": {"workflow": 7, "label": "Aufbewahrung läuft", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 704, "fields": {"workflow": 7, "label": "Aufbewahrung abgelaufen", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 705, "fields": {"workflow": 7, "label": "Löschung freigegeben", "initial": false, "completion": 90}},
+  {"model": "document_states.workflowstate", "pk": 706, "fields": {"workflow": 7, "label": "Gelöscht", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 707, "fields": {"workflow": 7, "label": "Rechtssperre aktiv", "initial": false, "completion": 70}},
+  {"model": "document_states.workflowtransition", "pk": 701, "fields": {"workflow": 7, "label": "Archivieren", "origin_state": 701, "destination_state": 702}},
+  {"model": "document_states.workflowtransition", "pk": 702, "fields": {"workflow": 7, "label": "Aufbewahrung starten", "origin_state": 702, "destination_state": 703}},
+  {"model": "document_states.workflowtransition", "pk": 703, "fields": {"workflow": 7, "label": "Frist abgelaufen", "origin_state": 703, "destination_state": 704}},
+  {"model": "document_states.workflowtransition", "pk": 704, "fields": {"workflow": 7, "label": "Rechtssperre setzen", "origin_state": 703, "destination_state": 707}},
+  {"model": "document_states.workflowtransition", "pk": 705, "fields": {"workflow": 7, "label": "Rechtssperre aufheben", "origin_state": 707, "destination_state": 703}},
+  {"model": "document_states.workflowtransition", "pk": 706, "fields": {"workflow": 7, "label": "Löschung freigeben", "origin_state": 704, "destination_state": 705}},
+  {"model": "document_states.workflowtransition", "pk": 707, "fields": {"workflow": 7, "label": "Löschen", "origin_state": 705, "destination_state": 706}},
+  {"model": "document_states.workflowtransition", "pk": 708, "fields": {"workflow": 7, "label": "Rechtssperre (aus abgelaufen)", "origin_state": 704, "destination_state": 707}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 8,
+    "fields": {
+      "label": "Datenschutzvorfall (72h)",
+      "internal_name": "data_breach"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 801, "fields": {"workflow": 8, "label": "Vorfall erkannt", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 802, "fields": {"workflow": 8, "label": "Erstbewertung", "initial": false, "completion": 20}},
+  {"model": "document_states.workflowstate", "pk": 803, "fields": {"workflow": 8, "label": "Meldepflichtig - Meldung vorbereiten", "initial": false, "completion": 40}},
+  {"model": "document_states.workflowstate", "pk": 804, "fields": {"workflow": 8, "label": "Behörde informiert", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 805, "fields": {"workflow": 8, "label": "Betroffene informiert", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 806, "fields": {"workflow": 8, "label": "Abgeschlossen", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 807, "fields": {"workflow": 8, "label": "Nicht meldepflichtig", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowtransition", "pk": 801, "fields": {"workflow": 8, "label": "Bewertung starten", "origin_state": 801, "destination_state": 802}},
+  {"model": "document_states.workflowtransition", "pk": 802, "fields": {"workflow": 8, "label": "Meldepflichtig", "origin_state": 802, "destination_state": 803}},
+  {"model": "document_states.workflowtransition", "pk": 803, "fields": {"workflow": 8, "label": "Nicht meldepflichtig", "origin_state": 802, "destination_state": 807}},
+  {"model": "document_states.workflowtransition", "pk": 804, "fields": {"workflow": 8, "label": "Behörde melden (72h!)", "origin_state": 803, "destination_state": 804}},
+  {"model": "document_states.workflowtransition", "pk": 805, "fields": {"workflow": 8, "label": "Betroffene informieren", "origin_state": 804, "destination_state": 805}},
+  {"model": "document_states.workflowtransition", "pk": 806, "fields": {"workflow": 8, "label": "Abschliessen", "origin_state": 805, "destination_state": 806}},
+  {"model": "document_states.workflowtransition", "pk": 807, "fields": {"workflow": 8, "label": "Dokumentieren und abschliessen", "origin_state": 807, "destination_state": 806}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 9,
+    "fields": {
+      "label": "Versicherungsschaden",
+      "internal_name": "insurance_claim"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 901, "fields": {"workflow": 9, "label": "Schaden gemeldet", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 902, "fields": {"workflow": 9, "label": "Dokumentation erstellt", "initial": false, "completion": 30}},
+  {"model": "document_states.workflowstate", "pk": 903, "fields": {"workflow": 9, "label": "Bei Versicherung eingereicht", "initial": false, "completion": 50}},
+  {"model": "document_states.workflowstate", "pk": 904, "fields": {"workflow": 9, "label": "In Bearbeitung", "initial": false, "completion": 70}},
+  {"model": "document_states.workflowstate", "pk": 905, "fields": {"workflow": 9, "label": "Reguliert", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 906, "fields": {"workflow": 9, "label": "Abgelehnt", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 907, "fields": {"workflow": 9, "label": "Widerspruch", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowtransition", "pk": 901, "fields": {"workflow": 9, "label": "Dokumentieren", "origin_state": 901, "destination_state": 902}},
+  {"model": "document_states.workflowtransition", "pk": 902, "fields": {"workflow": 9, "label": "Einreichen", "origin_state": 902, "destination_state": 903}},
+  {"model": "document_states.workflowtransition", "pk": 903, "fields": {"workflow": 9, "label": "In Bearbeitung", "origin_state": 903, "destination_state": 904}},
+  {"model": "document_states.workflowtransition", "pk": 904, "fields": {"workflow": 9, "label": "Regulierung erhalten", "origin_state": 904, "destination_state": 905}},
+  {"model": "document_states.workflowtransition", "pk": 905, "fields": {"workflow": 9, "label": "Ablehnung erhalten", "origin_state": 904, "destination_state": 906}},
+  {"model": "document_states.workflowtransition", "pk": 906, "fields": {"workflow": 9, "label": "Widerspruch einlegen", "origin_state": 906, "destination_state": 907}},
+  {"model": "document_states.workflowtransition", "pk": 907, "fields": {"workflow": 9, "label": "Widerspruch erfolgreich", "origin_state": 907, "destination_state": 905}},
+  {"model": "document_states.workflowtransition", "pk": 908, "fields": {"workflow": 9, "label": "Widerspruch abgelehnt", "origin_state": 907, "destination_state": 906}},
+
+  {
+    "model": "document_states.workflow",
+    "pk": 10,
+    "fields": {
+      "label": "ZUGFeRD-Verarbeitung",
+      "internal_name": "zugferd_processing"
+    }
+  },
+  {"model": "document_states.workflowstate", "pk": 1001, "fields": {"workflow": 10, "label": "PDF eingegangen", "initial": true, "completion": 0}},
+  {"model": "document_states.workflowstate", "pk": 1002, "fields": {"workflow": 10, "label": "ZUGFeRD erkannt", "initial": false, "completion": 30}},
+  {"model": "document_states.workflowstate", "pk": 1003, "fields": {"workflow": 10, "label": "Daten extrahiert", "initial": false, "completion": 60}},
+  {"model": "document_states.workflowstate", "pk": 1004, "fields": {"workflow": 10, "label": "Validierung OK", "initial": false, "completion": 80}},
+  {"model": "document_states.workflowstate", "pk": 1005, "fields": {"workflow": 10, "label": "In Buchhaltung übernommen", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 1006, "fields": {"workflow": 10, "label": "Kein ZUGFeRD", "initial": false, "completion": 100}},
+  {"model": "document_states.workflowstate", "pk": 1007, "fields": {"workflow": 10, "label": "Validierungsfehler", "initial": false, "completion": 50}},
+  {"model": "document_states.workflowtransition", "pk": 1001, "fields": {"workflow": 10, "label": "ZUGFeRD prüfen", "origin_state": 1001, "destination_state": 1002}},
+  {"model": "document_states.workflowtransition", "pk": 1002, "fields": {"workflow": 10, "label": "Kein ZUGFeRD gefunden", "origin_state": 1001, "destination_state": 1006}},
+  {"model": "document_states.workflowtransition", "pk": 1003, "fields": {"workflow": 10, "label": "Daten extrahieren", "origin_state": 1002, "destination_state": 1003}},
+  {"model": "document_states.workflowtransition", "pk": 1004, "fields": {"workflow": 10, "label": "Validieren", "origin_state": 1003, "destination_state": 1004}},
+  {"model": "document_states.workflowtransition", "pk": 1005, "fields": {"workflow": 10, "label": "Validierungsfehler", "origin_state": 1003, "destination_state": 1007}},
+  {"model": "document_states.workflowtransition", "pk": 1006, "fields": {"workflow": 10, "label": "In Buchhaltung übernehmen", "origin_state": 1004, "destination_state": 1005}},
+  {"model": "document_states.workflowtransition", "pk": 1007, "fields": {"workflow": 10, "label": "Manuell korrigieren", "origin_state": 1007, "destination_state": 1003}}
+]

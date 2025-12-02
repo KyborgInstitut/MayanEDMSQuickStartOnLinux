@@ -1,0 +1,17 @@
+[
+  {"model": "user_management.role", "pk": 1, "fields": {"label": "Administrator"}},
+  {"model": "user_management.role", "pk": 2, "fields": {"label": "Buchhaltung - Vollzugriff"}},
+  {"model": "user_management.role", "pk": 3, "fields": {"label": "Buchhaltung - Nur Lesen"}},
+  {"model": "user_management.role", "pk": 4, "fields": {"label": "Geschäftsführung"}},
+  {"model": "user_management.role", "pk": 5, "fields": {"label": "Datenschutzbeauftragter"}},
+  {"model": "user_management.role", "pk": 6, "fields": {"label": "Shop-Team"}},
+  {"model": "user_management.role", "pk": 7, "fields": {"label": "Steuerberater (extern)"}},
+  {"model": "user_management.role", "pk": 8, "fields": {"label": "Personal-Abteilung"}},
+  {"model": "user_management.role", "pk": 9, "fields": {"label": "Rechtsabteilung"}},
+  {"model": "user_management.role", "pk": 10, "fields": {"label": "Steuerprüfer (temporär)"}},
+  {"model": "user_management.role", "pk": 11, "fields": {"label": "Nur Lesen (global)"}},
+  {"model": "user_management.role", "pk": 12, "fields": {"label": "Vertragsmanagement"}},
+  {"model": "user_management.role", "pk": 13, "fields": {"label": "Projektleiter"}},
+  {"model": "user_management.role", "pk": 14, "fields": {"label": "IT-Sicherheit"}},
+  {"model": "user_management.role", "pk": 15, "fields": {"label": "Zoll und Export"}}
+]

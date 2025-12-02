@@ -1,0 +1,114 @@
+[
+  {"model": "documents.documenttype", "pk": 1, "fields": {"label": "Eingangsrechnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 2, "fields": {"label": "Ausgangsrechnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 3, "fields": {"label": "Gutschrift / Stornorechnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 4, "fields": {"label": "Angebot (ausgehend)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 5, "fields": {"label": "Bestellung (eingehend)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 6, "fields": {"label": "Mahnung (ein-/ausgehend)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 7, "fields": {"label": "Lieferschein", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 8, "fields": {"label": "Versandbeleg / Paketschein", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 9, "fields": {"label": "Versandlabel", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 10, "fields": {"label": "Retourenschein", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  
+  {"model": "documents.documenttype", "pk": 20, "fields": {"label": "Vertrag (allgemein)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 21, "fields": {"label": "Mietvertrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 22, "fields": {"label": "Dienstleistungsvertrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 23, "fields": {"label": "Kaufvertrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 24, "fields": {"label": "AV-Vertrag (Auftragsverarbeitung DSGVO)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 25, "fields": {"label": "NDA / Geheimhaltungsvereinbarung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 26, "fields": {"label": "Ehevertrag / Erbvertrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 27, "fields": {"label": "Testament / Verfügung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 28, "fields": {"label": "Vollmacht", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 30, "fields": {"label": "Arbeitsvertrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 31, "fields": {"label": "Lohn-/Gehaltsabrechnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 32, "fields": {"label": "Kündigung (Arbeitsverhältnis)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 33, "fields": {"label": "Abmahnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 34, "fields": {"label": "Krankmeldung / AU-Bescheinigung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 35, "fields": {"label": "Arbeitszeugnis", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 36, "fields": {"label": "Personalfragebogen / Stammdaten", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 37, "fields": {"label": "Urlaubsantrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 38, "fields": {"label": "Reisekostenabrechnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 40, "fields": {"label": "Umsatzsteuer-Voranmeldung (UStVA)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 41, "fields": {"label": "Steuererklärung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 42, "fields": {"label": "Steuerbescheid", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 43, "fields": {"label": "Betriebsprüfungsbericht", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 44, "fields": {"label": "Jahresabschluss / Bilanz", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 45, "fields": {"label": "BWA / GuV", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 46, "fields": {"label": "Kontoauszug", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 47, "fields": {"label": "Kassenbuch / Kassenbeleg", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 48, "fields": {"label": "OSS-Meldung (One-Stop-Shop)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 50, "fields": {"label": "Shop-Bestellung (Zusammenfassung)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 51, "fields": {"label": "Retoure / Rücksendung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 52, "fields": {"label": "Marketplace-Abrechnung (Amazon/eBay)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 53, "fields": {"label": "Zahlungsanbieter-Abrechnung (PayPal/Stripe)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 54, "fields": {"label": "Gutschein / Rabattcode", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 60, "fields": {"label": "DSGVO-Auskunftsersuchen", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 61, "fields": {"label": "DSGVO-Löschantrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 62, "fields": {"label": "Einwilligungserklärung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 63, "fields": {"label": "Widerrufserklärung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 64, "fields": {"label": "Datenschutzvorfall-Meldung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 65, "fields": {"label": "Verarbeitungsverzeichnis", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 66, "fields": {"label": "TOM-Dokumentation", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 67, "fields": {"label": "Datenschutz-Folgenabschätzung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 70, "fields": {"label": "Behördenschreiben", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 71, "fields": {"label": "Gerichtsdokument", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 72, "fields": {"label": "Anwaltskorrespondenz", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 73, "fields": {"label": "Bußgeldbescheid", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 74, "fields": {"label": "Handelsregisterauszug", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 80, "fields": {"label": "Gesellschaftsvertrag / Satzung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 81, "fields": {"label": "Gesellschafterbeschluss", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 82, "fields": {"label": "Gesellschafterliste", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 83, "fields": {"label": "Geschäftsführervertrag", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 90, "fields": {"label": "Versicherungspolice", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 91, "fields": {"label": "Versicherungs-Schadenmeldung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 92, "fields": {"label": "Versicherungs-Regulierung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 100, "fields": {"label": "Zoll-/Lieferantennachweis (EUR.1)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 101, "fields": {"label": "Zollanmeldung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 102, "fields": {"label": "Intrastat-Meldung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 103, "fields": {"label": "Produktstammdaten / Stückliste", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 110, "fields": {"label": "Software-Lizenz", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 111, "fields": {"label": "Wartungsvertrag (IT)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 112, "fields": {"label": "IT-Sicherheitsbericht / Pentest", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 113, "fields": {"label": "Technische Dokumentation", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 120, "fields": {"label": "Medizinische Unterlagen", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 121, "fields": {"label": "Rezept (Arzt)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 122, "fields": {"label": "Rentenbescheid", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 130, "fields": {"label": "Grundbuchauszug", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 131, "fields": {"label": "Energieausweis", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 132, "fields": {"label": "Nebenkostenabrechnung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 140, "fields": {"label": "Urkunde / Zeugnis", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 141, "fields": {"label": "Geburtsurkunde", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 142, "fields": {"label": "Führungszeugnis", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 150, "fields": {"label": "Korrespondenz (allgemein)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 151, "fields": {"label": "E-Mail (archiviert)", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 160, "fields": {"label": "Foto / Bild", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 161, "fields": {"label": "Model-Release / Bildfreigabe", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 162, "fields": {"label": "KSK-Meldung", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 170, "fields": {"label": "Kundenprojekt-Dokumentation", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 171, "fields": {"label": "Forschungs-/Prüfbericht", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 172, "fields": {"label": "Studien-/Ausbildungsunterlagen", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 180, "fields": {"label": "Marketing-Kampagne", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 181, "fields": {"label": "Werbematerial", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 190, "fields": {"label": "Inventur / Lagerbestand", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 191, "fields": {"label": "Preisliste / Katalog", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+
+  {"model": "documents.documenttype", "pk": 200, "fields": {"label": "GoBD-Verfahrensdokumentation", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}},
+  {"model": "documents.documenttype", "pk": 201, "fields": {"label": "Archivierungsprotokoll", "trash_time_period": null, "trash_time_unit": "days", "delete_time_period": null, "delete_time_unit": "days"}}
+]

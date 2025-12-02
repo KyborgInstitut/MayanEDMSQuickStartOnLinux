@@ -11,16 +11,31 @@ The script has been developed using [grok.com](https://grok.com)
 ## !!! ATTENTION !!!
 Project Progress:
 * ✅ Install.sh - only local usage, no https (not available in regular/default local networks - but possible)!!!
-* ❌ Default Datastructure import (you can set up your own, using the Webbrowser, one by one, as System default)
-  * ✅ cabinets.json
-  * ❌ document_types.json
-  * ❌ document_type_metadata_types.json
-  * ❌ saved_searches.json
-  * ❌ tags.json
-  * ❌ users.json
-  * ❌ workflows.json
-  * ❌ dashboard_widgets.json
+* ✅ Default Datastructure import (you can set up your own, using the Webbrowser, one by one, as System default)
+  * ✅ 01_metadata_types.json
+  * ✅ 02_document_types.json
+  * ✅ 03_tags.json
+  * ✅ 05_workflows.json
+  * ✅ 08_document_type_metadata_types.json
+  * ❌ -04_cabinets.json
+  * ❌ -06_users.json
+  * ❌ -07_roles.json
+  * ❌ -09_saved_searches.json
 
+To not checked or not importable files are remaining ❌!
+Those data are highly individual to your personal needs and especially the cabinets can only be integrated over the GUI, but it gives a good idea.
+A python script would be possible for cabinets.
+"saved_searches.json" ran into issues.
+
+You need to log into the root of the docker container, means starting on the host of your docker instance and execute the following command for each file, one after another:
+
+~~~ bash
+/opt/mayan-edms/bin/mayan-edms.py loaddata 01_metadata_types.json
+/opt/mayan-edms/bin/mayan-edms.py loaddata 02_document_types.json
+/opt/mayan-edms/bin/mayan-edms.py loaddata ,,,
+~~~
+
+You propably need to set read and wright rights to the /tmp folder inside docker to the mayan user!
 
 ## Copy files to your server
 
@@ -63,31 +78,32 @@ Importing those predefined types and metadata, you need to follow the exact same
 
 Get the name of your docker container of mayan inside the VM
 
-~~~bash
+~~~ bash
 docker ps
 ~~~
 
 insert all the documents for example in your home directory
-and than execute the following (make shure, to update the path to the directory including all the json files and the path to the direct docker container:
+and than execute the following - make shure, to update the path to the directory including all the json files and the path to the direct docker container.
+Pay attention to the commands at the beginning of this document to execute from inside the docker container:
 
-~~~bash
+~~~ bash
 # 1. JSON-Dateien in den Container kopieren
 docker cp /home/tobias/import/. mayan-mayan_app-1:/tmp/import/
 
 # 2. Jetzt alle Dateien importieren (Reihenfolge ist wichtig!)
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/document_types.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/metadata_types.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/document_type_metadata_types.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/tags.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/workflows.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/saved_searches.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/dashboard_widgets.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/cabinets.json
-docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/users.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/document_types.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/metadata_types.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/document_type_metadata_types.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/tags.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/workflows.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/saved_searches.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/dashboard_widgets.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/cabinets.json
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py loaddata /tmp/import/users.json
 
 # 3. Abschluss
-docker exec -it mayan-mayan_app-1 mayan-edms.py clear_cache
-docker exec -it mayan-mayan_app-1 mayan-edms.py rebuild_search_indexes
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py clear_cache
+❌ docker exec -it mayan-mayan_app-1 mayan-edms.py rebuild_search_indexes
 ~~~
 
 After importing all json files, clear the cash of mayan!
@@ -109,7 +125,7 @@ Depending of the size of your needs, here is a default list of different user an
 It is explicitly an aditional prozess!
 
 Source of the example file:
-~~~bash
+~~~ bash
 # 8. Cabinets (optional, aber empfohlen vor Users)
 mayan-edms.py loaddata cabinets.json
 
@@ -119,7 +135,7 @@ mayan-edms.py loaddata users.json
 
 Importing with the following commands inside the terminal on the VM Server:
 
-~~~bash
+~~~ bash
 // mayan-edms.py loaddata users.json
 mayan-edms.py createsuperuser        # root-Passwort setzen
 mayan-edms.py changepassword steuerpruefung_2025
