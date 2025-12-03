@@ -1,0 +1,45 @@
+[
+  {"model": "dynamic_search.search", "pk": 1, "fields": {"label": "Offene Eingangsrechnungen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 2, "fields": {"label": "Überfällige Rechnungen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 3, "fields": {"label": "Skonto noch möglich", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 4, "fields": {"label": "Rechnungen ohne Buchung", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 5, "fields": {"label": "ZUGFeRD-Rechnungen", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 10, "fields": {"label": "Verträge - Kündigung prüfen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 11, "fields": {"label": "Verträge - Aktiv", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 12, "fields": {"label": "AV-Verträge (DSGVO)", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 20, "fields": {"label": "DSGVO - Auskunft ausstehend", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 21, "fields": {"label": "DSGVO - Löschung durchzuführen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 22, "fields": {"label": "Datenschutzvorfälle", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 23, "fields": {"label": "Einwilligungen widerrufen", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 30, "fields": {"label": "GoBD - Löschbare Dokumente", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 31, "fields": {"label": "GoBD - Rechtssperre aktiv", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 32, "fields": {"label": "GoBD - Aufbewahrung abgelaufen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 33, "fields": {"label": "Steuerprüfung relevant", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 40, "fields": {"label": "Shop - Offene Retouren", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 41, "fields": {"label": "Shop - Sync-Fehler", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 42, "fields": {"label": "Shopify Bestellungen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 43, "fields": {"label": "Amazon Bestellungen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 44, "fields": {"label": "OSS-pflichtige Verkäufe", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 50, "fields": {"label": "Fristen - Kritisch (7 Tage)", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 51, "fields": {"label": "Fristen - 30 Tage", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 60, "fields": {"label": "Zollrelevante Dokumente", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 61, "fields": {"label": "Präferenznachweis fehlt", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 70, "fields": {"label": "Lizenzen - Ablauf prüfen", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 71, "fields": {"label": "Versicherungen", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 80, "fields": {"label": "KSK-Meldung ausstehend", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 90, "fields": {"label": "Unterschrift erforderlich", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 91, "fields": {"label": "Prüfung erforderlich", "scope": "documents.Document"}},
+
+  {"model": "dynamic_search.search", "pk": 100, "fields": {"label": "Buchhaltung 2025", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 101, "fields": {"label": "GmbH Dokumente", "scope": "documents.Document"}},
+  {"model": "dynamic_search.search", "pk": 102, "fields": {"label": "Privat Dokumente", "scope": "documents.Document"}}
+]
