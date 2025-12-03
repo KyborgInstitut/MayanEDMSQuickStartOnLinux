@@ -80,10 +80,13 @@ show_menu() {
     echo -e "${BLUE}║${NC}  ${GREEN}6)${NC} Mayan Status anzeigen                                ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}     → Container-Status, Logs, URLs                        ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}7)${NC} Dokumentquellen konfigurieren                        ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Watch/Staging Folder in GUI einrichten              ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} Beenden                                              ${BLUE}║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    read -p "Deine Wahl [0-6]: " choice
+    read -p "Deine Wahl [0-7]: " choice
     echo ""
 }
 
@@ -397,14 +400,36 @@ PYEOF
     IMPORT_PRETYPES=${IMPORT_PRETYPES:-N}
 
     if [[ "$IMPORT_PRETYPES" =~ ^[jJ]$ ]]; then
+        # Restart mayan_app to ensure clean configuration without problematic env vars
+        echo -e "${BLUE}Bereite Container für Import vor...${NC}"
+        docker compose up -d --force-recreate mayan_app
+
+        echo -n "Warte auf Neustart (30 Sekunden)"
+        for i in {1..30}; do
+            echo -n "."
+            sleep 1
+        done
+        echo ""
+        echo -e "${GREEN}✓ Container bereit${NC}"
+        echo ""
+
         if [[ -d "${SCRIPT_DIR}/preTypes" ]]; then
             echo "Kopiere preTypes ins Container..."
-            docker compose cp "${SCRIPT_DIR}/preTypes" mayan_app:/srv/mayan/
+            echo "Quelle: ${SCRIPT_DIR}/preTypes"
+
+            # Ensure /srv/mayan exists in container and copy preTypes folder
+            docker compose exec -T mayan_app mkdir -p /srv/mayan
+            docker compose cp "${SCRIPT_DIR}/preTypes" mayan_app:/srv/mayan/preTypes
 
             if [[ -f "${SCRIPT_DIR}/import_preTypes.sh" ]]; then
-                docker compose cp "${SCRIPT_DIR}/import_preTypes.sh" mayan_app:/srv/mayan/
-                docker compose cp "${SCRIPT_DIR}/import_cabinets_api.py" mayan_app:/srv/mayan/ 2>/dev/null || true
+                echo "Kopiere Import-Skripte..."
+                docker compose cp "${SCRIPT_DIR}/import_preTypes.sh" mayan_app:/srv/mayan/import_preTypes.sh
+                docker compose cp "${SCRIPT_DIR}/import_cabinets_api.py" mayan_app:/srv/mayan/import_cabinets_api.py 2>/dev/null || true
 
+                echo "Verzeichnisinhalt im Container:"
+                docker compose exec -T mayan_app ls -la /srv/mayan/ | grep -E "(preTypes|import_)" || true
+
+                echo ""
                 echo "Starte Import..."
                 docker compose exec -T mayan_app bash /srv/mayan/import_preTypes.sh
 
@@ -432,6 +457,41 @@ PYEOF
         fi
     else
         echo -e "${YELLOW}⊘ preTypes Import übersprungen${NC}"
+    fi
+    echo ""
+
+    # ------------------------------------------------------------------
+    # 8a. Dokumentquellen konfigurieren (optional)
+    # ------------------------------------------------------------------
+    echo -e "${BLUE}[8a/9] Dokumentquellen (Watch/Staging Folder) konfigurieren?${NC}"
+    echo ""
+    echo "Möchten Sie jetzt die Dokumentquellen einrichten?"
+    echo "  - Watch Folder: Automatischer Import von /srv/mayan/watch/"
+    echo "  - Staging Folder: Manueller Upload via Web-GUI"
+    echo ""
+    read -p "Dokumentquellen jetzt konfigurieren? (j/N): " SETUP_SOURCES
+
+    if [[ "$SETUP_SOURCES" =~ ^[jJyY]$ ]]; then
+        echo ""
+        echo -e "${BLUE}Konfiguriere Dokumentquellen...${NC}"
+
+        if [[ -f "${SCRIPT_DIR}/configure_sources.py" ]]; then
+            # Run as mayan user to avoid permission issues
+            # Redirect stdin from the script in SCRIPT_DIR (works regardless of location)
+            docker compose exec -T --user mayan mayan_app /opt/mayan-edms/bin/mayan-edms.py shell < "${SCRIPT_DIR}/configure_sources.py"
+
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✓ Dokumentquellen konfiguriert${NC}"
+            else
+                echo -e "${YELLOW}⚠ Konfiguration der Quellen fehlgeschlagen${NC}"
+                echo "  Sie können dies später über Menü-Option 7 nachholen"
+            fi
+        else
+            echo -e "${YELLOW}⚠ configure_sources.py nicht gefunden${NC}"
+            echo "  Sie können dies später über Menü-Option 7 nachholen"
+        fi
+    else
+        echo -e "${YELLOW}⊘ Dokumentquellen können später über Option 7 konfiguriert werden${NC}"
     fi
     echo ""
 
@@ -691,6 +751,90 @@ show_status() {
 }
 
 # =============================================================================
+# Option 7: Configure Document Sources
+# =============================================================================
+
+configure_sources() {
+    echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}  Dokumentquellen konfigurieren${NC}"
+    echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+    echo ""
+
+    if ! check_mayan_installed; then
+        echo -e "${RED}Mayan EDMS ist nicht installiert!${NC}"
+        echo "Bitte erst Mayan installieren (Option 1)"
+        press_enter
+        return
+    fi
+
+    cd "${MAYAN_DIR}"
+
+    # Check if Mayan is running
+    if ! docker compose ps mayan_app | grep -q "running"; then
+        echo -e "${RED}Mayan Container läuft nicht!${NC}"
+        echo "Starte Container..."
+        docker compose up -d
+        sleep 10
+    fi
+
+    echo "Diese Funktion konfiguriert folgende Dokumentquellen in Mayan:"
+    echo ""
+    echo "  1. Watch Folder: /srv/mayan/watch/"
+    echo "     → Automatischer Import von Dokumenten"
+    echo "     → Dateien werden nach Import gelöscht"
+    echo ""
+    echo "  2. Staging Folder: /srv/mayan/staging/"
+    echo "     → Manueller Upload via Web-GUI"
+    echo "     → Dateien bleiben nach Import erhalten"
+    echo ""
+    read -p "Fortfahren? (j/N): " CONFIRM
+
+    if [[ ! "$CONFIRM" =~ ^[jJyY]$ ]]; then
+        echo "Abgebrochen."
+        press_enter
+        return
+    fi
+
+    echo ""
+
+    # Check if script exists
+    if [[ ! -f "${SCRIPT_DIR}/configure_sources.py" ]]; then
+        echo -e "${RED}✗ configure_sources.py nicht gefunden in ${SCRIPT_DIR}${NC}"
+        press_enter
+        return
+    fi
+
+    echo -e "${BLUE}Konfiguriere Dokumentquellen...${NC}"
+    echo ""
+
+    # Execute the Python script via Django shell as mayan user
+    # Run as mayan user to avoid permission issues with lock manager
+    # Redirect stdin from SCRIPT_DIR (works regardless of where scripts are located)
+    docker compose exec -T --user mayan mayan_app /opt/mayan-edms/bin/mayan-edms.py shell < "${SCRIPT_DIR}/configure_sources.py"
+
+    EXIT_CODE=$?
+
+    echo ""
+
+    if [ $EXIT_CODE -eq 0 ]; then
+        echo -e "${GREEN}✓ Dokumentquellen erfolgreich konfiguriert!${NC}"
+        echo ""
+        echo "Zugriff in Mayan Web-GUI:"
+        echo "  → Setup → Sources → Document sources"
+        echo ""
+        echo "Verwendung:"
+        echo "  • Watch Folder:   sudo cp dokument.pdf /srv/mayan/watch/"
+        echo "  • Staging Folder: sudo cp dokument.pdf /srv/mayan/staging/"
+        echo "    dann in Mayan: Sources → Staging Folder → Upload"
+    else
+        echo -e "${RED}✗ Konfiguration fehlgeschlagen (Exit Code: ${EXIT_CODE})${NC}"
+        echo "Prüfe die Fehlermeldungen oben."
+    fi
+
+    press_enter
+}
+
+# =============================================================================
 # Main Loop
 # =============================================================================
 
@@ -718,6 +862,9 @@ main() {
                 ;;
             6)
                 show_status
+                ;;
+            7)
+                configure_sources
                 ;;
             0)
                 echo -e "${GREEN}Auf Wiedersehen!${NC}"

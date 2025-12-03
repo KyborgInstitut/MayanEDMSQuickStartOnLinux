@@ -6,7 +6,8 @@
 #   docker compose exec -T mayan_app /srv/mayan/import_preTypes.sh
 # =============================================================================
 
-set -euo pipefail
+# Don't use 'set -e' as we want to continue on errors and report them
+set -uo pipefail
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -38,27 +39,35 @@ SKIPPED=0
 import_fixture() {
     local file=$1
     local description=$2
+    local full_path="${PRETYPES_DIR}/${file}"
 
-    if [[ ! -f "$file" ]]; then
+    if [[ ! -f "$full_path" ]]; then
         echo -e "${YELLOW}⊘ SKIPPED: $description${NC}"
-        echo -e "   File not found: $file"
+        echo -e "   File not found: $full_path"
         ((SKIPPED++))
         return 0
     fi
 
     echo -e "${BLUE}→ Importing: $description${NC}"
-    echo -e "   File: $file"
+    echo -e "   File: $full_path"
 
-    if /opt/mayan-edms/bin/mayan-edms.py loaddata "$file" 2>&1 | tee /tmp/import_log.txt; then
+    # Run as mayan user (UID 1001) to avoid permission issues
+    # Use absolute path to ensure file is found regardless of working directory
+    su -s /bin/bash mayan -c "/opt/mayan-edms/bin/mayan-edms.py loaddata '$full_path'" 2>&1 | tee /tmp/import_log.txt
+    local exit_code=${PIPESTATUS[0]}
+
+    if [ $exit_code -eq 0 ]; then
         echo -e "${GREEN}✓ SUCCESS: $description${NC}"
         ((IMPORTED++))
     else
-        echo -e "${RED}✗ FAILED: $description${NC}"
-        echo -e "${YELLOW}   Check error above for details${NC}"
+        echo -e "${RED}✗ FAILED: $description (exit code: $exit_code)${NC}"
+        echo -e "${YELLOW}   Error details:${NC}"
         ((FAILED++))
 
-        # Show last few lines of error
-        tail -5 /tmp/import_log.txt | sed 's/^/   /'
+        # Show error output
+        if [ -f /tmp/import_log.txt ]; then
+            tail -20 /tmp/import_log.txt | sed 's/^/   /'
+        fi
     fi
     echo ""
 }
@@ -110,27 +119,38 @@ echo -e "${RED}✗ Failed:   $FAILED${NC}"
 echo -e "${YELLOW}⊘ Skipped:  $SKIPPED${NC}"
 echo ""
 
-if [[ $FAILED -eq 0 ]]; then
+if [[ $FAILED -eq 0 ]] && [[ $SKIPPED -eq 0 ]]; then
     echo -e "${GREEN}All imports completed successfully!${NC}"
 else
-    echo -e "${YELLOW}Some imports failed. This is often normal:${NC}"
+    if [[ $FAILED -gt 0 ]]; then
+        echo -e "${YELLOW}Some imports failed. Check error messages above for details.${NC}"
+        echo ""
+    fi
+
+    if [[ $SKIPPED -gt 0 ]]; then
+        echo -e "${YELLOW}Some imports were skipped (DISABLED files).${NC}"
+        echo ""
+    fi
+
+    echo "Common post-import tasks:"
     echo ""
-    echo "Common issues and solutions:"
     echo "  1. Users (06_users.json):"
     echo "     → Passwords set to '!' (unusable)"
-    echo "     → Set passwords via: Admin → Users → Edit User"
+    echo "     → Set passwords via: System → Users → Edit User"
     echo ""
     echo "  2. Roles (07_roles.json):"
     echo "     → Roles created but have no permissions"
-    echo "     → Assign permissions via: Admin → Roles → Edit Role"
+    echo "     → Assign permissions via: System → Roles → Edit Role → Permissions"
     echo ""
-    echo "  3. Cabinets (04_cabinets.json):"
-    echo "     → May need API-based import instead"
-    echo "     → See: /srv/mayan/import_cabinets_api.py"
+    echo "  3. Cabinets (04_cabinets_DISABLED.json):"
+    echo "     → Cannot be imported via loaddata (MPTT tree structure)"
+    echo "     → Create manually via: Cabinets → Create new cabinet"
+    echo "     → Or use Mayan's UI to build folder hierarchy"
     echo ""
-    echo "  4. Saved Searches (09_saved_searches.json):"
-    echo "     → Search queries may need manual configuration"
-    echo "     → Create searches via: Search → Saved searches"
+    echo "  4. Saved Searches (09_saved_searches_DISABLED.json):"
+    echo "     → Cannot be imported without query definitions"
+    echo "     → Create manually via: Search → Advanced search → Save this search"
+    echo "     → Configure filters and queries for each search"
 fi
 
 echo ""
