@@ -272,7 +272,7 @@ install_mayan() {
     cat > docker-compose.yml <<EOF
 services:
   mayan_postgres:
-    image: postgres:15.11
+    image: postgres:16
     restart: unless-stopped
     environment:
       POSTGRES_DB: mayan
@@ -289,19 +289,19 @@ services:
       - ${MAYAN_DIR}/redis_data:/data
 
   mayan_elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
     restart: unless-stopped
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock: -1
     volumes:
       - ${MAYAN_DIR}/elasticsearch_data:/usr/share/elasticsearch/data
 
   mayan_app:
-    image: mayanedms/mayanedms:s4.10
+    image: mayanedms/mayanedms:latest
     restart: unless-stopped
     depends_on:
       - mayan_postgres
@@ -312,9 +312,6 @@ services:
       MAYAN_LANGUAGE_CODE: ${MAYAN_LANG}
       MAYAN_ALLOWED_HOSTS: "${MAYAN_ALLOWED_HOSTS}"
       MAYAN_DEBUG: "${MAYAN_DEBUG}"
-      MAYAN_INITIAL_ADMIN_USERNAME: ${MAYAN_ADMIN_USER}
-      MAYAN_INITIAL_ADMIN_EMAIL: ${MAYAN_ADMIN_EMAIL}
-      MAYAN_INITIAL_ADMIN_PASSWORD: ${MAYAN_ADMIN_PASSWORD}
 $( [[ -n "$SMTP_ENV" ]] && echo "$SMTP_ENV" )
       MAYAN_DATABASE_ENGINE: django.db.backends.postgresql
       MAYAN_DATABASE_HOST: mayan_postgres
@@ -322,8 +319,6 @@ $( [[ -n "$SMTP_ENV" ]] && echo "$SMTP_ENV" )
       MAYAN_DATABASE_USER: mayan
       MAYAN_DATABASE_PASSWORD: ${MAYAN_DB_PASSWORD}
       MAYAN_REDIS_URL: redis://mayan_redis:6379/1
-      MAYAN_SEARCH_BACKEND: mayan.apps.dynamic_search.backends.elasticsearch.ElasticSearchBackend
-      MAYAN_SEARCH_BACKEND_ARGUMENTS: '{"hosts": ["mayan_elasticsearch:9200"]}'
     volumes:
       - ${MAYAN_DIR}/app_data:/var/lib/mayan
       - ${MAYAN_DIR}/staging:/staging_folder
@@ -354,6 +349,43 @@ EOF
         echo -n "."
         sleep 1
     done
+    echo ""
+
+    # Kurze Wartezeit für initiale Mayan-Initialisierung
+    echo "Warte auf Mayan Initialisierung (dies kann 3-5 Minuten dauern)..."
+    echo "Mayan lädt Datenbank-Schema, erstellt Admin-User und startet Worker..."
+    sleep 180  # 3 Minuten Wartezeit
+
+    # Schnelle Prüfung ob Container läuft
+    if docker compose ps mayan_app | grep -q "Up"; then
+        echo -e "${GREEN}✓ Mayan Container läuft${NC}"
+    else
+        echo -e "${YELLOW}⚠ Mayan Container möglicherweise noch nicht bereit${NC}"
+        echo "Prüfen Sie: docker compose logs -f mayan_app"
+    fi
+    echo ""
+
+    # Admin-User erstellen (falls nicht durch INITIAL_ADMIN* erstellt)
+    echo -e "${BLUE}Erstelle Admin-Benutzer...${NC}"
+    docker compose exec -T mayan_app /opt/mayan-edms/bin/mayan-edms.py createsuperuser \
+        --username "${MAYAN_ADMIN_USER}" \
+        --email "${MAYAN_ADMIN_EMAIL}" \
+        --noinput 2>/dev/null || true
+
+    # Setze Admin-Passwort
+    docker compose exec -T mayan_app /opt/mayan-edms/bin/mayan-edms.py shell <<PYEOF 2>/dev/null || true
+from django.contrib.auth import get_user_model
+User = get_user_model()
+try:
+    user = User.objects.get(username='${MAYAN_ADMIN_USER}')
+    user.set_password('${MAYAN_ADMIN_PASSWORD}')
+    user.save()
+    print('Admin password set')
+except:
+    pass
+PYEOF
+
+    echo -e "${GREEN}✓ Admin-Benutzer konfiguriert${NC}"
     echo ""
 
     # ------------------------------------------------------------------
