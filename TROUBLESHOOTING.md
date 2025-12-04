@@ -1,5 +1,173 @@
 # Mayan EDMS - Troubleshooting Guide
 
+## ❌ Error: "WORKER TIMEOUT" - Documents Won't Import
+
+### What This Means
+
+This error occurs when Celery workers take too long to process documents (OCR, conversion, etc.) and are killed by the timeout mechanism. Documents get stuck and won't import.
+
+**Symptoms:**
+- Documents uploaded but never appear in Mayan
+- Files remain in staging folder
+- Logs show: `[CRITICAL] WORKER TIMEOUT (pid:XXXX)`
+- Workers constantly restarting
+- Celery inspect commands fail with permission errors when run as root
+
+### 🚑 Quick Fix (Automatic)
+
+Run the fix script:
+
+```bash
+cd /path/to/MayanEDMSQuickStartOnLinux
+sudo bash fix_worker_timeouts.sh
+```
+
+This script will:
+1. ✅ Increase Gunicorn timeout (120s → 300s)
+2. ✅ Increase Celery task limits (1h → 2h)
+3. ✅ Clear stuck Celery tasks
+4. ✅ Restart all workers
+5. ✅ Verify Mayan starts correctly
+
+### 🔧 Manual Fix (Step by Step)
+
+#### Step 1: Diagnose the Issue
+
+```bash
+cd /srv/mayan
+
+# Check for timeouts in logs
+docker compose logs mayan_app --tail=100 | grep -i timeout
+
+# Check active Celery tasks (must run as mayan user!)
+docker compose exec --user mayan mayan_app \
+  /opt/mayan-edms/bin/mayan-edms.py celery inspect active
+
+# Check worker stats
+docker compose exec --user mayan mayan_app \
+  /opt/mayan-edms/bin/mayan-edms.py celery inspect stats
+```
+
+**Note:** Always use `--user mayan` when running Django/Celery commands to avoid permission errors!
+
+#### Step 2: Increase Timeouts
+
+Edit `/srv/mayan/docker-compose.yml` and add these environment variables under `mayan_app` service:
+
+```yaml
+services:
+  mayan_app:
+    environment:
+      # Existing variables...
+      MAYAN_GUNICORN_TIMEOUT: "300"              # 5 minutes
+      MAYAN_CELERY_TASK_TIME_LIMIT: "7200"      # 2 hours
+      MAYAN_CELERY_TASK_SOFT_TIME_LIMIT: "6900" # 1h 55min
+```
+
+#### Step 3: Clear Stuck Tasks
+
+```bash
+cd /srv/mayan
+
+# Stop Mayan
+docker compose stop mayan_app
+
+# Start dependencies
+docker compose up -d mayan_postgres mayan_redis mayan_elasticsearch
+sleep 5
+
+# Clear stuck tasks (run as mayan user!)
+docker compose run --rm --user mayan mayan_app \
+  /opt/mayan-edms/bin/mayan-edms.py celery purge -f
+
+# Restart everything
+docker compose up -d
+```
+
+#### Step 4: Monitor
+
+```bash
+# Watch logs for timeouts
+docker compose logs -f mayan_app | grep -E "timeout|TIMEOUT|Booting worker"
+
+# Check if workers are processing
+docker compose exec --user mayan mayan_app \
+  /opt/mayan-edms/bin/mayan-edms.py celery inspect active
+```
+
+### 🔍 Root Causes and Solutions
+
+**1. Large PDF Files with OCR**
+- **Cause:** Tesseract OCR taking too long on large/scanned PDFs
+- **Solution:** Increase timeouts (see Step 2) or disable OCR for specific document types
+
+**2. Document Conversion Failures**
+- **Cause:** Missing dependencies (LibreOffice, Poppler, ImageMagick)
+- **Solution:** Check dependencies are installed:
+  ```bash
+  docker compose exec mayan_app which tesseract    # OCR
+  docker compose exec mayan_app which libreoffice  # Office docs
+  docker compose exec mayan_app which pdftoppm     # PDF conversion
+  docker compose exec mayan_app which convert      # ImageMagick
+  ```
+
+**3. Insufficient Container Resources**
+- **Cause:** Container running out of memory during processing
+- **Solution:** Check resources:
+  ```bash
+  docker stats mayan-mayan_app-1 --no-stream
+  # If MEM % > 90%, increase container memory limit
+  ```
+
+**4. Elasticsearch Issues**
+- **Cause:** Search indexing timing out
+- **Solution:** Check Elasticsearch:
+  ```bash
+  docker compose exec mayan_elasticsearch \
+    curl -s http://localhost:9200/_cluster/health?pretty
+  # Should show "status": "green" or "yellow"
+  ```
+
+### 📊 Diagnostic Script
+
+Run comprehensive diagnostics:
+
+```bash
+cd /path/to/MayanEDMSQuickStartOnLinux
+sudo bash diagnose_workers.sh
+```
+
+This will check:
+- Celery worker status
+- Active tasks
+- Stuck documents
+- System resources
+- Missing dependencies
+- Worker configuration
+
+### ⚠️ Important: User Context
+
+**Always run Django/Celery commands as `mayan` user:**
+
+```bash
+# ❌ WRONG - causes permission errors
+docker compose exec mayan_app /opt/mayan-edms/bin/mayan-edms.py celery inspect ping
+
+# ✅ CORRECT - runs as mayan user
+docker compose exec --user mayan mayan_app \
+  /opt/mayan-edms/bin/mayan-edms.py celery inspect ping
+```
+
+### ✅ Prevention Tips
+
+1. **Set appropriate timeouts from start** - Use the values in Step 2
+2. **Monitor worker health** - Check logs regularly for timeouts
+3. **Test with small files first** - Verify processing works before bulk imports
+4. **Keep container resources adequate** - At least 2GB RAM per worker
+5. **Disable OCR for non-text documents** - If you don't need searchable text
+
+---
+
 ## ❌ Error: "BaseCommonException: Error during signal_post_upgrade signal"
 
 ### What This Means
