@@ -83,10 +83,13 @@ show_menu() {
     echo -e "${BLUE}║${NC}  ${GREEN}7)${NC} Dokumentquellen konfigurieren                        ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}     → Watch/Staging Folder in GUI einrichten              ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}8)${NC} Problemlösung & Diagnose                             ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Worker-Timeouts, Celery-Broker, Import-Tests       ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} Beenden                                              ${BLUE}║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    read -p "Deine Wahl [0-7]: " choice
+    read -p "Deine Wahl [0-8]: " choice
     echo ""
 }
 
@@ -158,39 +161,12 @@ install_mayan() {
     read -r -p "Sprache (Enter = de): " MAYAN_LANG
     MAYAN_LANG=${MAYAN_LANG:-de}
 
-    read -r -p "Admin-Benutzername (Enter = admin): " MAYAN_ADMIN_USER
-    MAYAN_ADMIN_USER=${MAYAN_ADMIN_USER:-admin}
-
-    while true; do
-        read -r -p "Admin-E-Mail: " MAYAN_ADMIN_EMAIL
-        if [[ -n "$MAYAN_ADMIN_EMAIL" ]]; then
-            break
-        else
-            echo -e "${RED}Admin-E-Mail darf nicht leer sein!${NC}"
-        fi
-    done
-
-    read -r -p "Admin-Passwort = DB-Passwort wiederverwenden? (j/N): " USE_SAME_ADMIN
-    USE_SAME_ADMIN=${USE_SAME_ADMIN:-N}
-
-    if [[ "$USE_SAME_ADMIN" =~ ^[jJ]$ ]]; then
-        MAYAN_ADMIN_PASSWORD="$MAYAN_DB_PASSWORD"
-    else
-        while true; do
-            echo -n "Admin-Passwort (min. 16 Zeichen): "
-            read -s AP1
-            echo
-            echo -n "Admin-Passwort wiederholen: "
-            read -s AP2
-            echo
-            if [[ "$AP1" == "$AP2" && ${#AP1} -ge 16 ]]; then
-                MAYAN_ADMIN_PASSWORD="$AP1"
-                break
-            else
-                echo -e "${RED}Passwörter stimmen nicht oder sind zu kurz!${NC}"
-            fi
-        done
-    fi
+    echo ""
+    echo -e "${YELLOW}Hinweis: Mayan erstellt automatisch einen Admin-User${NC}"
+    echo "  Standard-Benutzername: admin"
+    echo "  Standard-Passwort: admin"
+    echo "  Ändern Sie das Passwort nach dem ersten Login!"
+    echo ""
 
     read -r -p "Django Debug aktivieren? (nur Test) (y/N): " DEBUG_CHOICE
     DEBUG_CHOICE=${DEBUG_CHOICE:-N}
@@ -311,10 +287,6 @@ services:
       - mayan_redis
       - mayan_elasticsearch
     environment:
-      MAYAN_TIME_ZONE: ${MAYAN_TZ}
-      MAYAN_LANGUAGE_CODE: ${MAYAN_LANG}
-      MAYAN_ALLOWED_HOSTS: "${MAYAN_ALLOWED_HOSTS}"
-      MAYAN_DEBUG: "${MAYAN_DEBUG}"
 $( [[ -n "$SMTP_ENV" ]] && echo "$SMTP_ENV" )
       MAYAN_DATABASE_ENGINE: django.db.backends.postgresql
       MAYAN_DATABASE_HOST: mayan_postgres
@@ -322,6 +294,11 @@ $( [[ -n "$SMTP_ENV" ]] && echo "$SMTP_ENV" )
       MAYAN_DATABASE_USER: mayan
       MAYAN_DATABASE_PASSWORD: ${MAYAN_DB_PASSWORD}
       MAYAN_REDIS_URL: redis://mayan_redis:6379/1
+      MAYAN_CELERY_BROKER_URL: redis://mayan_redis:6379/1
+      MAYAN_CELERY_RESULT_BACKEND: redis://mayan_redis:6379/1
+      MAYAN_GUNICORN_TIMEOUT: "300"
+      MAYAN_CELERY_TASK_TIME_LIMIT: "7200"
+      MAYAN_CELERY_TASK_SOFT_TIME_LIMIT: "6900"
     volumes:
       - ${MAYAN_DIR}/app_data:/var/lib/mayan
       - ${MAYAN_DIR}/staging:/staging_folder
@@ -368,28 +345,6 @@ EOF
     fi
     echo ""
 
-    # Admin-User erstellen (falls nicht durch INITIAL_ADMIN* erstellt)
-    echo -e "${BLUE}Erstelle Admin-Benutzer...${NC}"
-    docker compose exec -T mayan_app /opt/mayan-edms/bin/mayan-edms.py createsuperuser \
-        --username "${MAYAN_ADMIN_USER}" \
-        --email "${MAYAN_ADMIN_EMAIL}" \
-        --noinput 2>/dev/null || true
-
-    # Setze Admin-Passwort
-    docker compose exec -T mayan_app /opt/mayan-edms/bin/mayan-edms.py shell <<PYEOF 2>/dev/null || true
-from django.contrib.auth import get_user_model
-User = get_user_model()
-try:
-    user = User.objects.get(username='${MAYAN_ADMIN_USER}')
-    user.set_password('${MAYAN_ADMIN_PASSWORD}')
-    user.save()
-    print('Admin password set')
-except:
-    pass
-PYEOF
-
-    echo -e "${GREEN}✓ Admin-Benutzer konfiguriert${NC}"
-    echo ""
 
     # ------------------------------------------------------------------
     # 8. preTypes Import (optional)
@@ -438,13 +393,10 @@ PYEOF
                 echo -e "${YELLOW}WICHTIG: Post-Import Schritte${NC}"
                 echo -e "${YELLOW}═══════════════════════════════════════════════════════${NC}"
                 echo ""
-                echo "1. Benutzer-Passwörter setzen (06_users.json):"
-                echo "   → System → Benutzer → Benutzer bearbeiten"
-                echo ""
-                echo "2. Rollen-Berechtigungen zuweisen (07_roles.json):"
+                echo "1. Rollen-Berechtigungen zuweisen (07_roles.json):"
                 echo "   → System → Rollen → Rolle bearbeiten → Berechtigungen"
                 echo ""
-                echo "3. Gespeicherte Suchen konfigurieren (09_saved_searches.json):"
+                echo "2. Gespeicherte Suchen konfigurieren (09_saved_searches.json):"
                 echo "   → Suche → Erweiterte Suche → Suche speichern"
                 echo ""
                 echo -e "${YELLOW}Details: ${SCRIPT_DIR}/IMPORT_GUIDE.md${NC}"
@@ -507,7 +459,7 @@ PYEOF
     echo -e "${GREEN}║  Mayan EDMS läuft!${NC}                                        ${GREEN}║${NC}"
     echo -e "${GREEN}╠════════════════════════════════════════════════════════════╣${NC}"
     echo -e "${GREEN}║${NC}  URL: ${YELLOW}http://${IP_ADDR}${NC}                                  ${GREEN}║${NC}"
-    echo -e "${GREEN}║${NC}  Admin: ${YELLOW}${MAYAN_ADMIN_USER}${NC}                                     ${GREEN}║${NC}"
+    echo -e "${GREEN}║${NC}  Admin: ${YELLOW}admin${NC} / Passwort: ${YELLOW}admin${NC}                          ${GREEN}║${NC}"
     echo -e "${GREEN}╠════════════════════════════════════════════════════════════╣${NC}"
     echo -e "${GREEN}║${NC}  Nützliche Befehle:                                       ${GREEN}║${NC}"
     echo -e "${GREEN}║${NC}  cd ${MAYAN_DIR}                                           ${GREEN}║${NC}"
@@ -835,6 +787,144 @@ configure_sources() {
 }
 
 # =============================================================================
+# Option 8: Troubleshooting & Diagnostics Submenu
+# =============================================================================
+
+troubleshooting_menu() {
+    while true; do
+        clear
+        echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}Problemlösung & Diagnose${NC}                                ${BLUE}║${NC}"
+        echo -e "${BLUE}╠════════════════════════════════════════════════════════════╣${NC}"
+        echo -e "${BLUE}║${NC}  ${YELLOW}Wähle ein Diagnose-Tool:${NC}                                ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}1)${NC} Celery Broker reparieren (KRITISCH)                 ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Behebt: memory:// statt redis://                   ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Dokumente werden nicht importiert                  ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}2)${NC} Worker-Timeouts beheben                              ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Behebt: WORKER TIMEOUT Fehler                      ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Erhöht Gunicorn & Celery Zeitlimits               ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}3)${NC} Worker-Diagnose ausführen                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Zeigt: Celery Status, Queues, Ressourcen          ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Prüft: OCR-Tools, Elasticsearch                    ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}4)${NC} Konfiguration verifizieren & Import testen          ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Überprüft: docker-compose.yml Einstellungen       ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Testet: Dokumentquellen, Berechtigungen           ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}5)${NC} Alle Diagnosen & Reparaturen (komplett)             ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Führt 1-4 nacheinander aus                         ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} Zurück zum Hauptmenü                                 ${BLUE}║${NC}"
+        echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        read -p "Deine Wahl [0-5]: " tshooting_choice
+        echo ""
+
+        case $tshooting_choice in
+            1)
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo -e "${GREEN}  Celery Broker reparieren${NC}"
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo ""
+                if [[ -f "${SCRIPT_DIR}/fix_celery_broker.sh" ]]; then
+                    bash "${SCRIPT_DIR}/fix_celery_broker.sh"
+                else
+                    echo -e "${RED}✗ fix_celery_broker.sh nicht gefunden in ${SCRIPT_DIR}${NC}"
+                fi
+                press_enter
+                ;;
+            2)
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo -e "${GREEN}  Worker-Timeouts beheben${NC}"
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo ""
+                if [[ -f "${SCRIPT_DIR}/fix_worker_timeouts.sh" ]]; then
+                    bash "${SCRIPT_DIR}/fix_worker_timeouts.sh"
+                else
+                    echo -e "${RED}✗ fix_worker_timeouts.sh nicht gefunden in ${SCRIPT_DIR}${NC}"
+                fi
+                press_enter
+                ;;
+            3)
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo -e "${GREEN}  Worker-Diagnose${NC}"
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo ""
+                if [[ -f "${SCRIPT_DIR}/diagnose_workers.sh" ]]; then
+                    bash "${SCRIPT_DIR}/diagnose_workers.sh"
+                else
+                    echo -e "${RED}✗ diagnose_workers.sh nicht gefunden in ${SCRIPT_DIR}${NC}"
+                fi
+                press_enter
+                ;;
+            4)
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo -e "${GREEN}  Konfiguration verifizieren & Import testen${NC}"
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo ""
+                if [[ -f "${SCRIPT_DIR}/verify_and_test_import.sh" ]]; then
+                    bash "${SCRIPT_DIR}/verify_and_test_import.sh"
+                else
+                    echo -e "${RED}✗ verify_and_test_import.sh nicht gefunden in ${SCRIPT_DIR}${NC}"
+                fi
+                press_enter
+                ;;
+            5)
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo -e "${GREEN}  Komplette Diagnose & Reparatur${NC}"
+                echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+                echo ""
+                echo "Führt alle Diagnosen und Reparaturen nacheinander aus:"
+                echo "  1. Celery Broker prüfen & reparieren"
+                echo "  2. Worker-Timeouts prüfen & erhöhen"
+                echo "  3. Worker-Diagnose"
+                echo "  4. Konfiguration verifizieren"
+                echo ""
+                read -p "Fortfahren? (j/N): " CONFIRM
+
+                if [[ "$CONFIRM" =~ ^[jJyY]$ ]]; then
+                    # 1. Diagnose first
+                    echo ""
+                    echo -e "${BLUE}[1/4] Worker-Diagnose...${NC}"
+                    [[ -f "${SCRIPT_DIR}/diagnose_workers.sh" ]] && bash "${SCRIPT_DIR}/diagnose_workers.sh"
+
+                    # 2. Fix Celery Broker
+                    echo ""
+                    echo -e "${BLUE}[2/4] Celery Broker reparieren...${NC}"
+                    [[ -f "${SCRIPT_DIR}/fix_celery_broker.sh" ]] && bash "${SCRIPT_DIR}/fix_celery_broker.sh"
+
+                    # 3. Fix Timeouts
+                    echo ""
+                    echo -e "${BLUE}[3/4] Worker-Timeouts beheben...${NC}"
+                    [[ -f "${SCRIPT_DIR}/fix_worker_timeouts.sh" ]] && bash "${SCRIPT_DIR}/fix_worker_timeouts.sh"
+
+                    # 4. Verify
+                    echo ""
+                    echo -e "${BLUE}[4/4] Konfiguration verifizieren...${NC}"
+                    [[ -f "${SCRIPT_DIR}/verify_and_test_import.sh" ]] && bash "${SCRIPT_DIR}/verify_and_test_import.sh"
+
+                    echo ""
+                    echo -e "${GREEN}✓ Alle Diagnosen und Reparaturen abgeschlossen!${NC}"
+                else
+                    echo "Abgebrochen."
+                fi
+                press_enter
+                ;;
+            0)
+                return
+                ;;
+            *)
+                echo -e "${RED}Ungültige Wahl!${NC}"
+                sleep 1
+                ;;
+        esac
+    done
+}
+
+# =============================================================================
 # Main Loop
 # =============================================================================
 
@@ -865,6 +955,9 @@ main() {
                 ;;
             7)
                 configure_sources
+                ;;
+            8)
+                troubleshooting_menu
                 ;;
             0)
                 echo -e "${GREEN}Auf Wiedersehen!${NC}"
