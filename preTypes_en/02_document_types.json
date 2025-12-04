@@ -1,0 +1,222 @@
+[
+  {
+    "model": "documents.documenttype",
+    "pk": 1,
+    "fields": {
+      "label": "Invoice - Incoming",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 2,
+    "fields": {
+      "label": "Invoice - Outgoing",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 3,
+    "fields": {
+      "label": "Purchase Order",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 4,
+    "fields": {
+      "label": "Sales Order",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 5,
+    "fields": {
+      "label": "Contract",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 6,
+    "fields": {
+      "label": "Agreement",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 7,
+    "fields": {
+      "label": "Receipt",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 8,
+    "fields": {
+      "label": "Quote",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 9,
+    "fields": {
+      "label": "Employment Contract",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 10,
+    "fields": {
+      "label": "Payroll Document",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 11,
+    "fields": {
+      "label": "Tax Document",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 12,
+    "fields": {
+      "label": "Financial Statement",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 13,
+    "fields": {
+      "label": "Bank Statement",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 14,
+    "fields": {
+      "label": "Report",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 15,
+    "fields": {
+      "label": "Correspondence",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 16,
+    "fields": {
+      "label": "Meeting Minutes",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 17,
+    "fields": {
+      "label": "Proposal",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 18,
+    "fields": {
+      "label": "Delivery Note",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 19,
+    "fields": {
+      "label": "Shipping Document",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  },
+  {
+    "model": "documents.documenttype",
+    "pk": 20,
+    "fields": {
+      "label": "Insurance Document",
+      "delete_time_period": 0,
+      "delete_time_unit": 0,
+      "trash_time_period": 0,
+      "trash_time_unit": 0
+    }
+  }
+]

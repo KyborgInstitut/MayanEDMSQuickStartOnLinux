@@ -1,0 +1,262 @@
+[
+  {
+    "model": "metadata.metadatatype",
+    "pk": 1,
+    "fields": {
+      "name": "Document Date",
+      "label": "Document Date",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 2,
+    "fields": {
+      "name": "Document Number",
+      "label": "Document Number",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 3,
+    "fields": {
+      "name": "Customer Name",
+      "label": "Customer Name",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 4,
+    "fields": {
+      "name": "Vendor Name",
+      "label": "Vendor Name",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 5,
+    "fields": {
+      "name": "Amount",
+      "label": "Amount",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 6,
+    "fields": {
+      "name": "Currency",
+      "label": "Currency",
+      "default": "USD",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 7,
+    "fields": {
+      "name": "Due Date",
+      "label": "Due Date",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 8,
+    "fields": {
+      "name": "Payment Status",
+      "label": "Payment Status",
+      "default": "Pending",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 9,
+    "fields": {
+      "name": "Contract Number",
+      "label": "Contract Number",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 10,
+    "fields": {
+      "name": "Start Date",
+      "label": "Start Date",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 11,
+    "fields": {
+      "name": "End Date",
+      "label": "End Date",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 12,
+    "fields": {
+      "name": "Employee Name",
+      "label": "Employee Name",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 13,
+    "fields": {
+      "name": "Employee ID",
+      "label": "Employee ID",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 14,
+    "fields": {
+      "name": "Project Name",
+      "label": "Project Name",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 15,
+    "fields": {
+      "name": "Department",
+      "label": "Department",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 16,
+    "fields": {
+      "name": "Status",
+      "label": "Status",
+      "default": "Active",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 17,
+    "fields": {
+      "name": "Priority",
+      "label": "Priority",
+      "default": "Normal",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 18,
+    "fields": {
+      "name": "Notes",
+      "label": "Notes",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 19,
+    "fields": {
+      "name": "Reference Number",
+      "label": "Reference Number",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  },
+  {
+    "model": "metadata.metadatatype",
+    "pk": 20,
+    "fields": {
+      "name": "Category",
+      "label": "Category",
+      "default": "",
+      "lookup": "",
+      "validation": "",
+      "parser": "",
+      "parser_arguments": ""
+    }
+  }
+]

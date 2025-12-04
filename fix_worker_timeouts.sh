@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Mayan EDMS - Fix Worker Timeout Issues
+# Mayan EDMS - Fix Worker Timeout Issues / Worker-Timeouts beheben
 # Increases timeouts and restarts workers
 # =============================================================================
 
@@ -13,98 +13,110 @@ BLUE='\033[0;36m'
 NC='\033[0m'
 
 MAYAN_DIR="/srv/mayan"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Load language messages
+if [[ -f "${SCRIPT_DIR}/lang_messages.sh" ]]; then
+    source "${SCRIPT_DIR}/lang_messages.sh"
+else
+    echo "ERROR: lang_messages.sh not found!"
+    exit 1
+fi
+
+# Use language from environment or default to English
+LANG_CODE="${MAYAN_LANG:-en}"
 
 echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
-echo -e "${BLUE}  Mayan EDMS - Fix Worker Timeouts${NC}"
+echo -e "${BLUE}  $(msg TIMEOUT_TITLE)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
 echo ""
 
 if [[ $EUID -ne 0 ]]; then
-    echo -e "${RED}This script must be run as root${NC}"
-    echo "Please use: sudo $0"
+    echo -e "${RED}$(msg ROOT_REQUIRED)${NC}"
+    echo "$(msg USE_SUDO)"
     exit 1
 fi
 
 if [[ ! -f "${MAYAN_DIR}/docker-compose.yml" ]]; then
-    echo -e "${RED}Mayan installation not found at ${MAYAN_DIR}${NC}"
+    echo -e "${RED}$(msg MAYAN_NOT_FOUND) ${MAYAN_DIR}${NC}"
     exit 1
 fi
 
 cd "${MAYAN_DIR}" || exit 1
 
-echo "This script will:"
-echo "  1. Increase Gunicorn worker timeout (120s → 300s)"
-echo "  2. Increase Celery task time limit (3600s → 7200s)"
-echo "  3. Clear stuck Celery tasks"
-echo "  4. Restart workers"
+echo "$(msg TIMEOUT_WILL_DO)"
+echo "  1. $(msg TIMEOUT_INCREASE_GUNICORN)"
+echo "  2. $(msg TIMEOUT_INCREASE_CELERY)"
+echo "  3. $(msg TIMEOUT_CLEAR_TASKS)"
+echo "  4. $(msg TIMEOUT_RESTART)"
 echo ""
-read -p "Continue? (y/N): " CONFIRM
+read -p "$(msg CONTINUE) $(msg YES_NO) " CONFIRM
 
-if [[ ! "$CONFIRM" =~ ^[yY]$ ]]; then
-    echo "Aborted."
+if [[ ! "$CONFIRM" =~ ^[yYjJ]$ ]]; then
+    echo "$(msg ABORTED)"
     exit 0
 fi
 
 echo ""
-echo -e "${BLUE}[1/5] Backing up docker-compose.yml${NC}"
+echo -e "${BLUE}[1/5] $(msg TIMEOUT_BACKUP)${NC}"
 cp docker-compose.yml docker-compose.yml.backup.$(date +%Y%m%d_%H%M%S)
-echo -e "${GREEN}✓ Backup created${NC}"
+echo -e "${GREEN}✓ $(msg BACKUP_CREATED)${NC}"
 echo ""
 
-echo -e "${BLUE}[2/5] Updating docker-compose.yml${NC}"
+echo -e "${BLUE}[2/5] $(msg TIMEOUT_UPDATE)${NC}"
 
 # Check if timeout settings already exist
 if grep -q "MAYAN_GUNICORN_TIMEOUT" docker-compose.yml; then
-    echo "MAYAN_GUNICORN_TIMEOUT already exists, updating..."
+    echo "$(msg TIMEOUT_EXISTS_UPDATING) MAYAN_GUNICORN_TIMEOUT..."
     sed -i 's/MAYAN_GUNICORN_TIMEOUT:.*/MAYAN_GUNICORN_TIMEOUT: "300"/' docker-compose.yml
 else
-    echo "Adding MAYAN_GUNICORN_TIMEOUT..."
+    echo "$(msg TIMEOUT_ADDING) MAYAN_GUNICORN_TIMEOUT..."
     sed -i '/MAYAN_REDIS_URL:/a\      MAYAN_GUNICORN_TIMEOUT: "300"' docker-compose.yml
 fi
 
 if grep -q "MAYAN_CELERY_TASK_TIME_LIMIT" docker-compose.yml; then
-    echo "MAYAN_CELERY_TASK_TIME_LIMIT already exists, updating..."
+    echo "$(msg TIMEOUT_EXISTS_UPDATING) MAYAN_CELERY_TASK_TIME_LIMIT..."
     sed -i 's/MAYAN_CELERY_TASK_TIME_LIMIT:.*/MAYAN_CELERY_TASK_TIME_LIMIT: "7200"/' docker-compose.yml
 else
-    echo "Adding MAYAN_CELERY_TASK_TIME_LIMIT..."
+    echo "$(msg TIMEOUT_ADDING) MAYAN_CELERY_TASK_TIME_LIMIT..."
     sed -i '/MAYAN_REDIS_URL:/a\      MAYAN_CELERY_TASK_TIME_LIMIT: "7200"' docker-compose.yml
 fi
 
 if grep -q "MAYAN_CELERY_TASK_SOFT_TIME_LIMIT" docker-compose.yml; then
-    echo "MAYAN_CELERY_TASK_SOFT_TIME_LIMIT already exists, updating..."
+    echo "$(msg TIMEOUT_EXISTS_UPDATING) MAYAN_CELERY_TASK_SOFT_TIME_LIMIT..."
     sed -i 's/MAYAN_CELERY_TASK_SOFT_TIME_LIMIT:.*/MAYAN_CELERY_TASK_SOFT_TIME_LIMIT: "6900"/' docker-compose.yml
 else
-    echo "Adding MAYAN_CELERY_TASK_SOFT_TIME_LIMIT..."
+    echo "$(msg TIMEOUT_ADDING) MAYAN_CELERY_TASK_SOFT_TIME_LIMIT..."
     sed -i '/MAYAN_REDIS_URL:/a\      MAYAN_CELERY_TASK_SOFT_TIME_LIMIT: "6900"' docker-compose.yml
 fi
 
-echo -e "${GREEN}✓ docker-compose.yml updated${NC}"
+echo -e "${GREEN}✓ $(msg CONFIG_UPDATED)${NC}"
 echo ""
 
-echo -e "${BLUE}[3/5] Stopping Mayan container${NC}"
+echo -e "${BLUE}[3/5] $(msg TIMEOUT_STOPPING)${NC}"
 docker compose stop mayan_app
-echo -e "${GREEN}✓ Container stopped${NC}"
+echo -e "${GREEN}✓ $(msg CONTAINER_STOPPED)${NC}"
 echo ""
 
-echo -e "${BLUE}[4/5] Clearing stuck Celery tasks${NC}"
-echo "Starting container temporarily to clear tasks..."
+echo -e "${BLUE}[4/5] $(msg TIMEOUT_CLEARING)${NC}"
+echo "$(msg TIMEOUT_TEMP_START)"
 docker compose up -d mayan_postgres mayan_redis mayan_elasticsearch
 sleep 5
 
 # Clear stuck tasks
-docker compose run --rm --user mayan mayan_app /opt/mayan-edms/bin/mayan-edms.py celery purge -f 2>&1 || echo "No tasks to purge"
-echo -e "${GREEN}✓ Tasks cleared${NC}"
+docker compose run --rm --user mayan mayan_app /opt/mayan-edms/bin/mayan-edms.py celery purge -f 2>&1 || echo "$(msg TIMEOUT_NO_TASKS)"
+echo -e "${GREEN}✓ $(msg TASKS_CLEARED)${NC}"
 echo ""
 
-echo -e "${BLUE}[5/5] Restarting all containers${NC}"
+echo -e "${BLUE}[5/5] $(msg TIMEOUT_RESTARTING)${NC}"
 docker compose up -d
 
 echo ""
-echo -n "Waiting for Mayan to initialize"
+echo -n "$(msg INSTALL_WAITING)"
 for i in {1..60}; do
     if docker compose logs mayan_app 2>/dev/null | grep -q "Booting worker with pid"; then
         echo ""
-        echo -e "${GREEN}✓ Mayan is ready${NC}"
+        echo -e "${GREEN}✓ $(msg INSTALL_READY)${NC}"
         break
     fi
     echo -n "."
@@ -114,19 +126,19 @@ echo ""
 
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}  Worker Timeouts Fixed${NC}"
+echo -e "${GREEN}  $(msg TIMEOUT_FIXED)${NC}"
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo ""
-echo "New timeout settings:"
-echo "  - Gunicorn worker timeout: 300 seconds (5 minutes)"
-echo "  - Celery task time limit: 7200 seconds (2 hours)"
-echo "  - Celery soft time limit: 6900 seconds (1h 55min)"
+echo "$(msg TIMEOUT_NEW_SETTINGS)"
+echo "  - $(msg TIMEOUT_GUNICORN_SET)"
+echo "  - $(msg TIMEOUT_CELERY_SET)"
+echo "  - $(msg TIMEOUT_SOFT_SET)"
 echo ""
-echo "Try uploading your document again:"
-echo "  1. Via web: Sources → Staging Folder → Upload"
-echo "  2. Via watch folder: sudo cp file.pdf /srv/mayan/watch/"
+echo "$(msg TIMEOUT_TRY_UPLOAD)"
+[[ "$LANG_CODE" == "en" ]] && echo "  1. Via web: Sources → Staging Folder → Upload" || echo "  1. Via Web: Quellen → Staging-Ordner → Hochladen"
+[[ "$LANG_CODE" == "en" ]] && echo "  2. Via watch folder: sudo cp file.pdf /srv/mayan/watch/" || echo "  2. Via Watch-Ordner: sudo cp datei.pdf /srv/mayan/watch/"
 echo ""
-echo "Monitor for timeouts:"
+echo "$(msg TIMEOUT_MONITOR)"
 echo "  docker compose logs -f mayan_app | grep -i timeout"
 echo ""
 
@@ -135,9 +147,9 @@ RUNNING=$(docker compose ps --services --filter "status=running" | wc -l)
 TOTAL=$(docker compose ps --services | wc -l)
 
 if [ "$RUNNING" -eq "$TOTAL" ]; then
-    echo -e "${GREEN}✓ All containers running (${RUNNING}/${TOTAL})${NC}"
+    echo -e "${GREEN}✓ $(msg CONTAINERS_RUNNING) (${RUNNING}/${TOTAL})${NC}"
 else
-    echo -e "${YELLOW}⚠ Only ${RUNNING}/${TOTAL} containers running${NC}"
-    echo "Check status: docker compose ps"
+    echo -e "${YELLOW}⚠ $(msg CONTAINERS_PARTIAL) ${RUNNING}/${TOTAL}${NC}"
+    echo "$(msg CHECK_STATUS) docker compose ps"
 fi
 echo ""

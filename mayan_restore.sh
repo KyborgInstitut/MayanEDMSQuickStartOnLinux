@@ -1,16 +1,28 @@
 #!/bin/bash
 # =============================================================================
-# Mayan EDMS Restore-Script
-# - Passend zum Backup-Script /srv/mayan_backups/mayan-backup-*.tar.gz
-# - Stellt:
-#     * PostgreSQL-Dump (mayan_db.sql)
+# Mayan EDMS Restore Script / Restore-Script
+# - Matches backup script /srv/mayan_backups/mayan-backup-*.tar.gz
+# - Restores / Stellt wieder her:
+#     * PostgreSQL dump (mayan_db.sql)
 #     * /srv/mayan/app_data, staging, watch, redis_data, elasticsearch_data
 #     * optional /var/lib/mayan_postgres
-#     * docker-compose.yml (falls fehlt)
-#   wieder her und importiert die DB.
+#     * docker-compose.yml (if missing / falls fehlt)
 # =============================================================================
 
 set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Load language messages
+if [[ -f "${SCRIPT_DIR}/lang_messages.sh" ]]; then
+    source "${SCRIPT_DIR}/lang_messages.sh"
+else
+    echo "ERROR: lang_messages.sh not found!"
+    exit 1
+fi
+
+# Use language from environment or default to English
+LANG_CODE="${MAYAN_LANG:-en}"
 
 STACK_DIR="/srv/mayan"
 BACKUP_ROOT="/srv/mayan_backups"
@@ -18,128 +30,136 @@ PG_SERVICE="mayan_postgres"
 PG_DB="mayan"
 PG_USER="mayan"
 
-echo "=== Mayan EDMS Restore ==="
-echo "Stack-Verzeichnis  : ${STACK_DIR}"
-echo "Backup-Verzeichnis : ${BACKUP_ROOT}"
+echo "=== $(msg RESTORE_TITLE) ==="
+echo "$(msg BACKUP_STACK_DIR): ${STACK_DIR}"
+echo "$(msg BACKUP_DIR): ${BACKUP_ROOT}"
 echo
 
-# 1. Backup-Datei auswählen
+# 1. Select backup file / Backup-Datei auswählen
 if [[ ! -d "${BACKUP_ROOT}" ]]; then
-  echo "FEHLER: Backup-Verzeichnis ${BACKUP_ROOT} existiert nicht."
+  echo "$(msg ERROR): $(msg ERROR_BACKUP_DIR_NOT_FOUND) ${BACKUP_ROOT}"
   exit 1
 fi
 
 LATEST_BACKUP="$(ls -1t "${BACKUP_ROOT}"/mayan-backup-*.tar.gz 2>/dev/null | head -n 1 || true)"
 
 if [[ -z "${LATEST_BACKUP}" ]]; then
-  echo "FEHLER: Keine Backup-Dateien unter ${BACKUP_ROOT} gefunden."
+  echo "$(msg ERROR): $(msg ERROR_NO_BACKUPS) ${BACKUP_ROOT}"
   exit 1
 fi
 
-echo "Neueste Backup-Datei: ${LATEST_BACKUP}"
-read -r -p "Pfad zur Backup-Datei (Enter = neuestes Backup verwenden): " BACKUP_FILE
+echo "$(msg RESTORE_LATEST): ${LATEST_BACKUP}"
+read -r -p "$(msg RESTORE_PATH_PROMPT) " BACKUP_FILE
 BACKUP_FILE=${BACKUP_FILE:-${LATEST_BACKUP}}
 
 if [[ ! -f "${BACKUP_FILE}" ]]; then
-  echo "FEHLER: Backup-Datei ${BACKUP_FILE} existiert nicht."
+  echo "$(msg ERROR): $(msg ERROR_BACKUP_NOT_FOUND) ${BACKUP_FILE}"
   exit 1
 fi
 
 echo
-echo "Verwende Backup-Datei: ${BACKUP_FILE}"
+echo "$(msg RESTORE_USING): ${BACKUP_FILE}"
 echo
 
-# 2. Sicherheitsabfrage
-echo "WARNUNG: Der Restore überschreibt bestehende Mayan-Daten und die Datenbank '${PG_DB}'."
-read -r -p "Fortfahren? (ja/NEIN): " CONFIRM
-CONFIRM=${CONFIRM:-NEIN}
+# 2. Safety confirmation / Sicherheitsabfrage
+echo "$(msg WARNING): $(msg RESTORE_WARNING) '${PG_DB}'"
+read -r -p "$(msg RESTORE_CONFIRM) " CONFIRM
+[[ "$LANG_CODE" == "en" ]] && CONFIRM=${CONFIRM:-NO} || CONFIRM=${CONFIRM:-NEIN}
 
-if [[ "${CONFIRM}" != "ja" ]]; then
-  echo "Abgebrochen."
-  exit 0
+if [[ "$LANG_CODE" == "en" ]]; then
+  if [[ "${CONFIRM}" != "yes" ]] && [[ "${CONFIRM}" != "YES" ]]; then
+    echo "$(msg ABORTED)"
+    exit 0
+  fi
+else
+  if [[ "${CONFIRM}" != "ja" ]] && [[ "${CONFIRM}" != "JA" ]]; then
+    echo "$(msg ABORTED)"
+    exit 0
+  fi
 fi
 
-# 3. Dienste stoppen
-echo "Stoppe laufende Docker-Services..."
-cd "${STACK_DIR}" || { echo "FEHLER: ${STACK_DIR} existiert nicht."; exit 1; }
+# 3. Stop services / Dienste stoppen
+echo "$(msg RESTORE_STOPPING)"
+cd "${STACK_DIR}" || { echo "$(msg ERROR): ${STACK_DIR}"; exit 1; }
 docker compose down || true
 echo
 
-# 4. Temp-Verzeichnis & Backup entpacken
+# 4. Temp directory & extract backup / Temp-Verzeichnis & Backup entpacken
 WORK_DIR="$(mktemp -d)"
-echo "Arbeitsverzeichnis: ${WORK_DIR}"
-echo "Entpacke Backup..."
+echo "$(msg BACKUP_WORK_DIR): ${WORK_DIR}"
+echo "$(msg RESTORE_EXTRACTING)"
 tar xzf "${BACKUP_FILE}" -C "${WORK_DIR}"
-echo "Entpacken erledigt."
+echo "$(msg RESTORE_EXTRACTED)"
 echo
 
-# 5. docker-compose.yml wiederherstellen (wenn nötig)
+# 5. Restore docker-compose.yml (if needed) / docker-compose.yml wiederherstellen (wenn nötig)
 if [[ ! -f "${STACK_DIR}/docker-compose.yml" ]]; then
   if [[ -f "${WORK_DIR}/docker-compose.yml" ]]; then
-    echo "docker-compose.yml aus Backup wiederherstellen..."
+    echo "$(msg RESTORE_COMPOSE)"
     cp "${WORK_DIR}/docker-compose.yml" "${STACK_DIR}/docker-compose.yml"
   else
-    echo "WARNUNG: Keine docker-compose.yml im Backup gefunden."
+    echo "$(msg WARNING): $(msg RESTORE_NO_COMPOSE)"
   fi
 else
-  echo "docker-compose.yml im Stack-Verzeichnis vorhanden – belasse aktuelle Datei."
+  echo "$(msg RESTORE_KEEP_COMPOSE)"
 fi
 echo
 
-# 6. Dateien/Verzeichnisse wiederherstellen
-echo "Stelle Mayan-Dateiverzeichnisse wieder her..."
+# 6. Restore files/directories / Dateien/Verzeichnisse wiederherstellen
+echo "$(msg RESTORE_DIRECTORIES)"
 
 mkdir -p /srv/mayan/{app_data,staging,watch,redis_data,elasticsearch_data}
 mkdir -p /var/lib/mayan_postgres
 
 for DIR in app_data staging watch redis_data elasticsearch_data; do
   if [[ -d "${WORK_DIR}/${DIR}" ]]; then
-    echo "  -> ${DIR} nach /srv/mayan/${DIR}"
+    [[ "$LANG_CODE" == "en" ]] && echo "  -> ${DIR} to /srv/mayan/${DIR}" || echo "  -> ${DIR} nach /srv/mayan/${DIR}"
     rm -rf "/srv/mayan/${DIR}"
     mkdir -p "/srv/mayan/${DIR}"
     cp -a "${WORK_DIR}/${DIR}/." "/srv/mayan/${DIR}/"
   else
-    echo "  (Hinweis: ${DIR} nicht im Backup gefunden – übersprungen)"
+    [[ "$LANG_CODE" == "en" ]] && echo "  (Note: ${DIR} not found in backup – skipped)" || echo "  (Hinweis: ${DIR} nicht im Backup gefunden – übersprungen)"
   fi
 done
 
 if [[ -d "${WORK_DIR}/mayan_postgres" ]]; then
-  echo "  -> PostgreSQL-Datenverzeichnis nach /var/lib/mayan_postgres (optional, Bonus)"
+  [[ "$LANG_CODE" == "en" ]] && echo "  -> PostgreSQL data directory to /var/lib/mayan_postgres (optional)" || echo "  -> PostgreSQL-Datenverzeichnis nach /var/lib/mayan_postgres (optional)"
   rm -rf /var/lib/mayan_postgres
   mkdir -p /var/lib/mayan_postgres
   cp -a "${WORK_DIR}/mayan_postgres/." /var/lib/mayan_postgres/
 else
-  echo "  (Hinweis: mayan_postgres nicht im Backup gefunden – physisches PG-Verzeichnis bleibt unverändert/leer)"
+  [[ "$LANG_CODE" == "en" ]] && echo "  (Note: mayan_postgres not found in backup – physical PG directory remains unchanged)" || echo "  (Hinweis: mayan_postgres nicht im Backup gefunden – physisches PG-Verzeichnis bleibt unverändert)"
 fi
 
-echo "Datei- und Verzeichnisrestore abgeschlossen."
+echo "$(msg RESTORE_DIR_COMPLETE)"
 echo
 
-# 7. Berechtigungen korrigieren
-echo "Setze Dateiberechtigungen..."
+# 7. Fix permissions / Berechtigungen korrigieren
+echo "$(msg RESTORE_PERMISSIONS)"
 
 chown 999:999   /var/lib/mayan_postgres
 chown 100:100   /srv/mayan/redis_data
 chown 1000:1000 /srv/mayan/elasticsearch_data
 chown 1001:1001 /srv/mayan/app_data /srv/mayan/staging /srv/mayan/watch
 
-echo "Berechtigungen gesetzt."
+echo "$(msg RESTORE_PERMISSIONS_SET)"
 echo
 
-# 8. PostgreSQL-Datenbank wiederherstellen
+# 8. Restore PostgreSQL database / PostgreSQL-Datenbank wiederherstellen
 if [[ ! -f "${WORK_DIR}/mayan_db.sql" ]]; then
-  echo "FEHLER: mayan_db.sql im Backup nicht gefunden. Kein DB-Restore möglich."
+  echo "$(msg ERROR): $(msg ERROR_NO_DB_DUMP)"
   rm -rf "${WORK_DIR}"
   exit 1
 fi
 
-echo "Starte nur den PostgreSQL-Service..."
+echo "$(msg RESTORE_START_PG)"
 docker compose up -d "${PG_SERVICE}"
 
-echo -n "Warte auf PostgreSQL"
+echo -n "$(msg RESTORE_WAIT_PG)"
 for i in {1..60}; do
     if docker compose logs "${PG_SERVICE}" 2>/dev/null | grep -q "database system is ready to accept connections"; then
-        echo -e "\nPostgreSQL ist bereit."
+        echo ""
+        echo "$(msg RESTORE_PG_READY)"
         break
     fi
     echo -n "."
@@ -147,7 +167,7 @@ for i in {1..60}; do
 done
 echo
 
-echo "Stelle Datenbank '${PG_DB}' wieder her (DROP & CREATE + Import)..."
+echo "$(msg RESTORE_DB) '${PG_DB}'..."
 
 docker compose exec -T "${PG_SERVICE}" \
   psql -U "${PG_USER}" -d postgres -c "DROP DATABASE IF EXISTS ${PG_DB};"
@@ -159,18 +179,18 @@ cat "${WORK_DIR}/mayan_db.sql" | \
   docker compose exec -T "${PG_SERVICE}" \
   psql -U "${PG_USER}" "${PG_DB}"
 
-echo "Datenbank-Import abgeschlossen."
+echo "$(msg RESTORE_DB_COMPLETE)"
 echo
 
-# 9. Gesamt-Stack starten
-echo "Starte kompletten Mayan-Stack..."
+# 9. Start complete stack / Gesamt-Stack starten
+echo "$(msg RESTORE_START_STACK)"
 docker compose up -d
-echo "Stack gestartet."
+echo "$(msg RESTORE_STACK_STARTED)"
 echo
 
-# 10. Aufräumen
+# 10. Cleanup / Aufräumen
 rm -rf "${WORK_DIR}"
 
 IP_ADDR=$(hostname -I | awk '{print $1}' | head -1)
-echo "=== Restore abgeschlossen ==="
-echo "Mayan EDMS sollte unter http://${IP_ADDR} erreichbar sein."
+echo "=== $(msg RESTORE_COMPLETE) ==="
+echo "$(msg RESTORE_ACCESS) http://${IP_ADDR}"

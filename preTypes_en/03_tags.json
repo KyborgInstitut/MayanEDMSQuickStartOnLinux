@@ -1,0 +1,162 @@
+[
+  {
+    "model": "tags.tag",
+    "pk": 1,
+    "fields": {
+      "label": "Urgent",
+      "color": "#ff0000"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 2,
+    "fields": {
+      "label": "Pending",
+      "color": "#ffaa00"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 3,
+    "fields": {
+      "label": "Completed",
+      "color": "#00ff00"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 4,
+    "fields": {
+      "label": "Approved",
+      "color": "#0000ff"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 5,
+    "fields": {
+      "label": "Rejected",
+      "color": "#ff0000"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 6,
+    "fields": {
+      "label": "In Progress",
+      "color": "#ffaa00"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 7,
+    "fields": {
+      "label": "Paid",
+      "color": "#00ff00"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 8,
+    "fields": {
+      "label": "Unpaid",
+      "color": "#ff0000"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 9,
+    "fields": {
+      "label": "Overdue",
+      "color": "#aa0000"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 10,
+    "fields": {
+      "label": "Confidential",
+      "color": "#000000"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 11,
+    "fields": {
+      "label": "Internal",
+      "color": "#0000aa"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 12,
+    "fields": {
+      "label": "External",
+      "color": "#00aa00"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 13,
+    "fields": {
+      "label": "Draft",
+      "color": "#aaaaaa"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 14,
+    "fields": {
+      "label": "Final",
+      "color": "#00aa00"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 15,
+    "fields": {
+      "label": "Archived",
+      "color": "#666666"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 16,
+    "fields": {
+      "label": "For Review",
+      "color": "#ff00ff"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 17,
+    "fields": {
+      "label": "High Priority",
+      "color": "#ff0000"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 18,
+    "fields": {
+      "label": "Low Priority",
+      "color": "#00ffff"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 19,
+    "fields": {
+      "label": "Customer",
+      "color": "#0088ff"
+    }
+  },
+  {
+    "model": "tags.tag",
+    "pk": 20,
+    "fields": {
+      "label": "Vendor",
+      "color": "#ff8800"
+    }
+  }
+]

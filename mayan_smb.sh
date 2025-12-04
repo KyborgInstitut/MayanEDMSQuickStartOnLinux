@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # ============================================================================
-# Mayan EDMS Scanner-Benutzer Setup - Version 3.0 FINAL
-# Vollständig getestet und funktionsfähig
+# Mayan EDMS Scanner User Setup / Scanner-Benutzer Setup - Version 3.0 FINAL
+# Fully tested and functional / Vollständig getestet und funktionsfähig
 # ============================================================================
 
-# Farben für Ausgabe
+# Colors for output / Farben für Ausgabe
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -13,170 +13,183 @@ BLUE='\033[0;36m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color
 
-# Fehler-Tracking
+# Error tracking / Fehler-Tracking
 ERRORS=0
 WARNINGS=0
 
 # Logging
 LOG_FILE="/var/log/mayan_scanner_setup.log"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Funktion: Logging
+# Load language messages
+if [[ -f "${SCRIPT_DIR}/lang_messages.sh" ]]; then
+    source "${SCRIPT_DIR}/lang_messages.sh"
+else
+    echo "ERROR: lang_messages.sh not found!"
+    exit 1
+fi
+
+# Use language from environment or default to English
+LANG_CODE="${MAYAN_LANG:-en}"
+
+# Function: Logging
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
 }
 
-# Funktion: Fehler-Handling
+# Function: Error handling
 error() {
-    echo -e "${RED}✗ FEHLER: $1${NC}" | tee -a "$LOG_FILE"
+    echo -e "${RED}✗ $(msg ERROR): $1${NC}" | tee -a "$LOG_FILE"
     ((ERRORS++))
 }
 
-# Funktion: Warnung
+# Function: Warning
 warning() {
-    echo -e "${YELLOW}⚠ WARNUNG: $1${NC}" | tee -a "$LOG_FILE"
+    echo -e "${YELLOW}⚠ $(msg WARNING): $1${NC}" | tee -a "$LOG_FILE"
     ((WARNINGS++))
 }
 
-# Funktion: Erfolg
+# Function: Success
 success() {
     echo -e "${GREEN}✓ $1${NC}" | tee -a "$LOG_FILE"
 }
 
-# Funktion: Info
+# Function: Info
 info() {
     echo -e "${BLUE}ℹ $1${NC}" | tee -a "$LOG_FILE"
 }
 
-# Prüfen ob als root ausgeführt
-if [ "$EUID" -ne 0 ]; then 
-    error "Bitte als root ausführen: sudo $0"
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then
+    error "$(msg ROOT_REQUIRED)"
+    [[ "$LANG_CODE" == "en" ]] && echo "Please run: sudo $0" || echo "Bitte als root ausführen: sudo $0"
     exit 1
 fi
 
 clear
 echo -e "${GREEN}============================================${NC}"
-echo -e "${GREEN}Mayan EDMS Scanner Setup v3.0 FINAL${NC}"
-echo -e "${GREEN}Mit vollständiger Fehlerkorrektur${NC}"
+echo -e "${GREEN}$(msg SMB_TITLE)${NC}"
+echo -e "${GREEN}$(msg SMB_SUBTITLE)${NC}"
 echo -e "${GREEN}============================================${NC}"
 echo ""
-log "=== Setup gestartet ==="
+log "=== $(msg SMB_SETUP_STARTED) ==="
 
 # ============================================================================
-# PHASE 0: System-Vorprüfungen
+# PHASE 0: System Checks / System-Vorprüfungen
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 0] System-Vorprüfungen${NC}"
+echo -e "${MAGENTA}[PHASE 0] $(msg SMB_PHASE0)${NC}"
 echo ""
 
-# Prüfe Betriebssystem
-info "Prüfe Betriebssystem..."
+# Check operating system / Prüfe Betriebssystem
+info "$(msg SMB_CHECK_OS)"
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     if [[ "$ID" != "ubuntu" ]] && [[ "$ID_LIKE" != *"ubuntu"* ]]; then
-        warning "Nicht Ubuntu erkannt: $ID $VERSION_ID - Script könnte Anpassungen benötigen"
+        warning "$(msg SMB_NOT_UBUNTU): $ID $VERSION_ID"
     else
-        success "Ubuntu $VERSION_ID erkannt"
+        success "$(msg SMB_UBUNTU_OK) $VERSION_ID"
     fi
 else
-    warning "Betriebssystem nicht erkannt"
+    warning "$(msg SMB_OS_UNKNOWN)"
 fi
 
-# Prüfe Netzwerk-Konfiguration
-info "Prüfe Netzwerk-Konfiguration..."
+# Check network configuration / Prüfe Netzwerk-Konfiguration
+info "$(msg SMB_CHECK_NETWORK)"
 IP_ADDRS=$(hostname -I | tr ' ' '\n' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | grep -v '^127\.' | head -1)
 if [ -z "$IP_ADDRS" ]; then
-    error "Keine gültige IP-Adresse gefunden!"
+    error "$(msg SMB_NO_IP)"
     exit 1
 else
-    success "IP-Adresse gefunden: $IP_ADDRS"
+    success "$(msg SMB_IP_FOUND): $IP_ADDRS"
 fi
 
-# Prüfe Hostname-Länge (NetBIOS Limit: 15 Zeichen)
+# Check hostname length (NetBIOS limit: 15 chars)
 HOSTNAME=$(hostname)
 HOSTNAME_LENGTH=${#HOSTNAME}
 if [ $HOSTNAME_LENGTH -gt 15 ]; then
-    warning "Hostname '$HOSTNAME' ist zu lang für NetBIOS (${HOSTNAME_LENGTH} > 15 Zeichen)"
+    [[ "$LANG_CODE" == "en" ]] && warning "Hostname '$HOSTNAME' too long for NetBIOS (${HOSTNAME_LENGTH} > 15 chars)" || warning "Hostname '$HOSTNAME' ist zu lang für NetBIOS (${HOSTNAME_LENGTH} > 15 Zeichen)"
     NETBIOS_NAME="${HOSTNAME:0:15}"
-    info "Verwende gekürzten NetBIOS-Namen: $NETBIOS_NAME"
+    info "$(msg SMB_NETBIOS_SHORT): $NETBIOS_NAME"
 else
     NETBIOS_NAME="$HOSTNAME"
-    success "Hostname-Länge OK: $HOSTNAME_LENGTH Zeichen"
+    [[ "$LANG_CODE" == "en" ]] && success "Hostname length OK: $HOSTNAME_LENGTH chars" || success "Hostname-Länge OK: $HOSTNAME_LENGTH Zeichen"
 fi
 
-# Prüfe Mayan-Verzeichnisse
-info "Prüfe Mayan EDMS Verzeichnisse..."
+# Check Mayan directories / Prüfe Mayan-Verzeichnisse
+info "$(msg SMB_CHECK_DIRS)"
 MAYAN_BASE="/srv/mayan"
 WATCH_DIR="$MAYAN_BASE/watch"
 STAGING_DIR="$MAYAN_BASE/staging"
 
 if [ ! -d "$WATCH_DIR" ]; then
-    error "Watch-Verzeichnis nicht gefunden: $WATCH_DIR"
-    read -p "Soll das Verzeichnis erstellt werden? (j/n): " CREATE_WATCH
-    if [[ "$CREATE_WATCH" == "j" || "$CREATE_WATCH" == "J" ]]; then
+    error "$(msg SMB_WATCH_NOT_FOUND): $WATCH_DIR"
+    read -p "$(msg SMB_CREATE_DIR) $(msg YES_NO) " CREATE_WATCH
+    if [[ "$CREATE_WATCH" =~ ^[yYjJ]$ ]]; then
         mkdir -p "$WATCH_DIR"
-        success "Watch-Verzeichnis erstellt"
+        success "$(msg SMB_WATCH_CREATED)"
     else
-        error "Abbruch: Watch-Verzeichnis erforderlich"
+        error "$(msg SMB_WATCH_REQUIRED)"
         exit 1
     fi
 else
-    success "Watch-Verzeichnis gefunden: $WATCH_DIR"
+    success "$(msg SMB_WATCH_FOUND): $WATCH_DIR"
 fi
 
 if [ ! -d "$STAGING_DIR" ]; then
-    warning "Staging-Verzeichnis nicht gefunden: $STAGING_DIR"
-    read -p "Soll das Verzeichnis erstellt werden? (j/n): " CREATE_STAGING
-    if [[ "$CREATE_STAGING" == "j" || "$CREATE_STAGING" == "J" ]]; then
+    warning "$(msg SMB_STAGING_NOT_FOUND): $STAGING_DIR"
+    read -p "$(msg SMB_CREATE_DIR) $(msg YES_NO) " CREATE_STAGING
+    if [[ "$CREATE_STAGING" =~ ^[yYjJ]$ ]]; then
         mkdir -p "$STAGING_DIR"
-        success "Staging-Verzeichnis erstellt"
+        success "$(msg SMB_STAGING_CREATED)"
     else
-        warning "Staging-Verzeichnis wird übersprungen"
+        warning "$(msg SMB_STAGING_SKIPPED)"
     fi
 else
-    success "Staging-Verzeichnis gefunden: $STAGING_DIR"
+    success "$(msg SMB_STAGING_FOUND): $STAGING_DIR"
 fi
 
-# Prüfe Extended Attributes Support
-info "Prüfe Extended Attributes Support (für macOS)..."
+# Check Extended Attributes support
+info "$(msg SMB_CHECK_EA)"
 if command -v setfattr &> /dev/null; then
     if setfattr -n user.test -v test "$WATCH_DIR" 2>/dev/null; then
         getfattr -n user.test "$WATCH_DIR" &>/dev/null && setfattr -x user.test "$WATCH_DIR" 2>/dev/null
-        success "Extended Attributes werden unterstützt"
+        success "$(msg SMB_EA_SUPPORTED)"
         EA_SUPPORT=true
     else
-        warning "Extended Attributes nicht verfügbar - macOS-Support eingeschränkt"
+        warning "$(msg SMB_EA_LIMITED)"
         EA_SUPPORT=false
     fi
 else
-    warning "setfattr nicht installiert - wird nachinstalliert"
+    warning "$(msg SMB_EA_INSTALL)"
     EA_SUPPORT=false
 fi
 
 echo ""
 
 # ============================================================================
-# PHASE 1: Zeitsynchronisation
+# PHASE 1: Time Synchronization / Zeitsynchronisation
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 1] Zeitsynchronisation${NC}"
+echo -e "${MAGENTA}[PHASE 1] $(msg SMB_PHASE1)${NC}"
 echo ""
 
-info "Prüfe Systemzeit..."
+info "$(msg SMB_CHECK_TIME)"
 CURRENT_TIME=$(date +%s)
 if [ $CURRENT_TIME -lt 1700000000 ]; then
-    error "Systemzeit scheint falsch zu sein: $(date)"
-    warning "Dies kann zu SSL/TLS und APT-Problemen führen"
+    error "$(msg SMB_TIME_WRONG): $(date)"
+    warning "$(msg SMB_TIME_ISSUES)"
 else
-    success "Systemzeit plausibel: $(date)"
+    success "$(msg SMB_TIME_OK): $(date)"
 fi
 
-info "Installiere/Konfiguriere chrony für Zeitsynchronisation..."
+info "$(msg SMB_INSTALL_CHRONY)"
 if ! command -v chronyd &> /dev/null; then
     apt-get update -qq 2>&1 | tee -a "$LOG_FILE"
     apt-get install -y -qq chrony 2>&1 | tee -a "$LOG_FILE"
-    success "Chrony installiert"
+    success "$(msg SMB_CHRONY_INSTALLED)"
 else
-    success "Chrony bereits installiert"
+    success "$(msg SMB_CHRONY_EXISTS)"
 fi
 
 systemctl enable chrony &>/dev/null
@@ -187,283 +200,283 @@ sleep 3
 if systemctl is-active --quiet chrony; then
     SYNC_STATUS=$(timedatectl status | grep "System clock synchronized" | awk '{print $4}')
     if [ "$SYNC_STATUS" = "yes" ]; then
-        success "Systemzeit synchronisiert"
+        success "$(msg SMB_TIME_SYNCED)"
     else
-        warning "Zeitsynchronisation läuft noch..."
+        warning "$(msg SMB_TIME_SYNCING)"
     fi
 else
-    error "Chrony konnte nicht gestartet werden"
+    error "$(msg SMB_CHRONY_FAILED)"
 fi
 
 echo ""
 
 # ============================================================================
-# PHASE 2: Benutzer-Konfiguration
+# PHASE 2: User Configuration / Benutzer-Konfiguration
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 2] Benutzer-Konfiguration${NC}"
+echo -e "${MAGENTA}[PHASE 2] $(msg SMB_PHASE2)${NC}"
 echo ""
 
-# Benutzername abfragen mit Validierung
+# Ask for username with validation
 while true; do
-    read -p "Benutzername für Scanner-Zugang: " USERNAME
-    
-    # UNIX-Namenskonventionen prüfen
+    read -p "$(msg SMB_USERNAME_PROMPT) " USERNAME
+
+    # Check UNIX naming conventions
     if [[ ! "$USERNAME" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]]; then
-        error "Ungültiger Benutzername!"
-        echo "Regeln:"
-        echo "  - Nur Kleinbuchstaben, Zahlen, _ und -"
-        echo "  - Muss mit Buchstabe oder _ beginnen"
-        echo "  - Max. 32 Zeichen"
+        error "$(msg SMB_INVALID_USERNAME)"
+        echo "$(msg SMB_USERNAME_RULES)"
+        [[ "$LANG_CODE" == "en" ]] && echo "  - Lowercase letters, numbers, _ and - only" || echo "  - Nur Kleinbuchstaben, Zahlen, _ und -"
+        [[ "$LANG_CODE" == "en" ]] && echo "  - Must start with letter or _" || echo "  - Muss mit Buchstabe oder _ beginnen"
+        [[ "$LANG_CODE" == "en" ]] && echo "  - Max. 32 characters" || echo "  - Max. 32 Zeichen"
         echo ""
         continue
     fi
-    
-    # Prüfen ob Benutzer bereits existiert
+
+    # Check if user already exists
     if id "$USERNAME" &>/dev/null; then
-        warning "Benutzer '$USERNAME' existiert bereits!"
-        read -p "Trotzdem fortfahren und SMB-Zugang einrichten? (j/n): " CONTINUE
-        if [[ "$CONTINUE" != "j" && "$CONTINUE" != "J" ]]; then
+        warning "$(msg SMB_USER_EXISTS) '$USERNAME'"
+        read -p "$(msg SMB_CONTINUE_ANYWAY) $(msg YES_NO) " CONTINUE
+        if [[ ! "$CONTINUE" =~ ^[yYjJ]$ ]]; then
             continue
         fi
         USER_EXISTS=true
     else
         USER_EXISTS=false
     fi
-    
+
     break
 done
 
-# Passwort abfragen
+# Ask for password
 while true; do
-    read -s -p "Passwort für $USERNAME: " PASSWORD
+    read -s -p "$(msg SMB_PASSWORD_PROMPT) $USERNAME: " PASSWORD
     echo ""
-    read -s -p "Passwort wiederholen: " PASSWORD2
+    read -s -p "$(msg SMB_PASSWORD_REPEAT) " PASSWORD2
     echo ""
-    
+
     if [ "$PASSWORD" != "$PASSWORD2" ]; then
-        error "Passwörter stimmen nicht überein!"
+        error "$(msg SMB_PASSWORD_MISMATCH)"
         continue
     fi
-    
+
     if [ ${#PASSWORD} -lt 8 ]; then
-        warning "Passwort ist kürzer als 8 Zeichen - empfohlen sind mindestens 8"
-        read -p "Trotzdem verwenden? (j/n): " USE_SHORT
-        if [[ "$USE_SHORT" != "j" && "$USE_SHORT" != "J" ]]; then
+        warning "$(msg SMB_PASSWORD_SHORT)"
+        read -p "$(msg SMB_USE_ANYWAY) $(msg YES_NO) " USE_SHORT
+        if [[ ! "$USE_SHORT" =~ ^[yYjJ]$ ]]; then
             continue
         fi
     fi
-    
+
     break
 done
 
 echo ""
-log "Benutzer '$USERNAME' wird konfiguriert"
+log "$(msg SMB_CONFIG_USER) '$USERNAME'"
 
-# Unix-Benutzer anlegen/aktualisieren
+# Create/update Unix user
 if [ "$USER_EXISTS" = false ]; then
-    info "Erstelle Unix-Benutzer '$USERNAME'..."
+    info "$(msg SMB_CREATE_USER) '$USERNAME'..."
     useradd -m -s /bin/bash "$USERNAME"
     echo "$USERNAME:$PASSWORD" | chpasswd
-    success "Unix-Benutzer erstellt"
+    success "$(msg SMB_USER_CREATED)"
 else
-    info "Unix-Benutzer existiert bereits, aktualisiere Passwort..."
+    info "$(msg SMB_USER_UPDATE)"
     echo "$USERNAME:$PASSWORD" | chpasswd
-    success "Passwort aktualisiert"
+    success "$(msg SMB_PASSWORD_UPDATED)"
 fi
 
-# Zu Gruppen hinzufügen
+# Add to groups
 usermod -a -G users "$USERNAME"
-success "Benutzer zu Gruppe 'users' hinzugefügt"
+success "$(msg SMB_USER_GROUP_ADDED)"
 
 echo ""
 
 # ============================================================================
-# PHASE 3: Paket-Installation
+# PHASE 3: Package Installation / Paket-Installation
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 3] Paket-Installation${NC}"
+echo -e "${MAGENTA}[PHASE 3] $(msg SMB_PHASE3)${NC}"
 echo ""
 
-# ACL-Tools
-info "Installiere ACL-Tools..."
+# ACL tools
+info "$(msg SMB_INSTALL_ACL)"
 if ! command -v setfacl &> /dev/null; then
     apt-get update -qq 2>&1 | tee -a "$LOG_FILE"
     apt-get install -y -qq acl 2>&1 | tee -a "$LOG_FILE"
-    success "ACL installiert"
+    success "$(msg SMB_ACL_INSTALLED)"
 else
-    success "ACL bereits installiert"
+    success "$(msg SMB_ACL_EXISTS)"
 fi
 
-# attr für Extended Attributes
-info "Installiere attr (für macOS-Kompatibilität)..."
+# attr for Extended Attributes
+info "$(msg SMB_INSTALL_ATTR)"
 if ! command -v setfattr &> /dev/null; then
     apt-get install -y -qq attr 2>&1 | tee -a "$LOG_FILE"
-    success "attr installiert"
+    success "$(msg SMB_ATTR_INSTALLED)"
 else
-    success "attr bereits installiert"
+    success "$(msg SMB_ATTR_EXISTS)"
 fi
 
 # Samba
-info "Installiere Samba..."
+info "$(msg SMB_INSTALL_SAMBA)"
 if ! command -v smbd &> /dev/null; then
     apt-get install -y -qq samba samba-common-bin 2>&1 | tee -a "$LOG_FILE"
-    success "Samba installiert"
+    success "$(msg SMB_SAMBA_INSTALLED)"
 else
-    success "Samba bereits installiert"
+    success "$(msg SMB_SAMBA_EXISTS)"
 fi
 
-# smbclient für Tests
-info "Installiere smbclient (für Tests)..."
+# smbclient for tests
+info "$(msg SMB_INSTALL_CLIENT)"
 if ! command -v smbclient &> /dev/null; then
     apt-get install -y -qq smbclient 2>&1 | tee -a "$LOG_FILE"
-    success "smbclient installiert"
+    success "$(msg SMB_CLIENT_INSTALLED)"
 else
-    success "smbclient bereits installiert"
+    success "$(msg SMB_CLIENT_EXISTS)"
 fi
 
 echo ""
 
 # ============================================================================
-# PHASE 4: Berechtigungen setzen (KORRIGIERT)
+# PHASE 4: Set Permissions / Berechtigungen setzen
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 4] Berechtigungen setzen${NC}"
+echo -e "${MAGENTA}[PHASE 4] $(msg SMB_PHASE4)${NC}"
 echo ""
 
-# KRITISCH: Berechtigungen müssen 777 sein für SMB-Schreibzugriff
+# CRITICAL: Permissions must be 777 for SMB write access
 if [ -d "$WATCH_DIR" ]; then
-    info "Setze Berechtigungen für $WATCH_DIR..."
-    
-    # Owner setzen
+    info "$(msg SMB_SET_PERMS) $WATCH_DIR..."
+
+    # Set owner
     chown "$USERNAME:$USERNAME" "$WATCH_DIR"
-    
-    # Berechtigungen: 777 für volle Funktionalität
+
+    # Permissions: 777 for full functionality
     chmod 777 "$WATCH_DIR"
-    
-    # ACLs setzen
+
+    # Set ACLs
     setfacl -R -m u:$USERNAME:rwx "$WATCH_DIR"
     setfacl -R -d -m u:$USERNAME:rwx "$WATCH_DIR"
-    
-    # Prüfe ob korrekt gesetzt
+
+    # Check if correctly set
     PERMS=$(stat -c '%a' "$WATCH_DIR")
     if [ "$PERMS" = "777" ]; then
-        success "Berechtigungen für watch-Ordner gesetzt (777)"
+        success "$(msg SMB_WATCH_PERMS_OK) (777)"
     else
-        error "Berechtigungen konnten nicht korrekt gesetzt werden (ist: $PERMS, soll: 777)"
+        [[ "$LANG_CODE" == "en" ]] && error "Permissions could not be set correctly (is: $PERMS, should: 777)" || error "Berechtigungen konnten nicht korrekt gesetzt werden (ist: $PERMS, soll: 777)"
     fi
 else
-    error "Watch-Verzeichnis nicht verfügbar"
+    error "$(msg SMB_WATCH_NOT_AVAIL)"
 fi
 
-# Staging-Folder (falls vorhanden)
+# Staging folder (if present)
 if [ -d "$STAGING_DIR" ]; then
-    info "Setze Berechtigungen für $STAGING_DIR..."
-    
+    info "$(msg SMB_SET_PERMS) $STAGING_DIR..."
+
     chown "$USERNAME:$USERNAME" "$STAGING_DIR"
     chmod 777 "$STAGING_DIR"
     setfacl -R -m u:$USERNAME:rwx "$STAGING_DIR"
     setfacl -R -d -m u:$USERNAME:rwx "$STAGING_DIR"
-    
+
     PERMS=$(stat -c '%a' "$STAGING_DIR")
     if [ "$PERMS" = "777" ]; then
-        success "Berechtigungen für staging-Ordner gesetzt (777)"
+        success "$(msg SMB_STAGING_PERMS_OK) (777)"
     else
-        warning "Staging-Berechtigungen: $PERMS (empfohlen: 777)"
+        [[ "$LANG_CODE" == "en" ]] && warning "Staging permissions: $PERMS (recommended: 777)" || warning "Staging-Berechtigungen: $PERMS (empfohlen: 777)"
     fi
 fi
 
-# Extended Attributes setzen (für macOS)
+# Set Extended Attributes (for macOS)
 if [ "$EA_SUPPORT" = true ] || command -v setfattr &> /dev/null; then
-    info "Setze Extended Attributes für macOS-Kompatibilität..."
+    info "$(msg SMB_SET_EA)"
     setfattr -n user.mayan_scanner -v "$USERNAME" "$WATCH_DIR" 2>/dev/null
     [ -d "$STAGING_DIR" ] && setfattr -n user.mayan_scanner -v "$USERNAME" "$STAGING_DIR" 2>/dev/null
-    success "Extended Attributes gesetzt"
+    success "$(msg SMB_EA_SET)"
 fi
 
 echo ""
 
 # ============================================================================
-# PHASE 5: Samba-Benutzer konfigurieren
+# PHASE 5: Configure Samba User / Samba-Benutzer konfigurieren
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 5] Samba-Benutzer konfigurieren${NC}"
+echo -e "${MAGENTA}[PHASE 5] $(msg SMB_PHASE5)${NC}"
 echo ""
 
-info "Erstelle/Aktualisiere Samba-Benutzer '$USERNAME'..."
+info "$(msg SMB_CREATE_SMB_USER) '$USERNAME'..."
 
-# Entferne alten Benutzer falls vorhanden (für saubere Neuinstallation)
+# Remove old user if present (for clean reinstall)
 if pdbedit -L 2>/dev/null | grep -q "^$USERNAME:"; then
-    info "Entferne alten Samba-Benutzer..."
+    info "$(msg SMB_REMOVE_OLD_USER)"
     smbpasswd -x "$USERNAME" 2>/dev/null
 fi
 
-# Erstelle Samba-Benutzer NEU
-info "Erstelle neuen Samba-Benutzer..."
+# Create new Samba user
+info "$(msg SMB_CREATE_NEW_USER)"
 (echo "$PASSWORD"; echo "$PASSWORD") | smbpasswd -a -s "$USERNAME" 2>/dev/null
 
-# Benutzer aktivieren
+# Enable user
 smbpasswd -e "$USERNAME" &>/dev/null
 
-# Prüfe ob Benutzer jetzt existiert
+# Check if user now exists
 if pdbedit -L 2>/dev/null | grep -q "^$USERNAME:"; then
-    success "Samba-Benutzer '$USERNAME' konfiguriert"
-    
-    # Zeige Benutzer-Details (gekürzt)
+    success "$(msg SMB_SMB_USER_OK) '$USERNAME'"
+
+    # Show user details (shortened)
     USER_INFO=$(pdbedit -L -v 2>/dev/null | grep -A 3 "Unix username:.*$USERNAME")
-    log "Samba-Benutzer Details: $USER_INFO"
+    [[ "$LANG_CODE" == "en" ]] && log "Samba user details: $USER_INFO" || log "Samba-Benutzer Details: $USER_INFO"
 else
-    error "Samba-Benutzer konnte nicht erstellt werden"
+    error "$(msg SMB_SMB_USER_FAILED)"
 fi
 
 echo ""
 
 # ============================================================================
-# PHASE 6: Samba-Konfiguration (VOLLSTÄNDIG KORRIGIERT)
+# PHASE 6: Samba Configuration / Samba-Konfiguration
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 6] Samba-Konfiguration${NC}"
+echo -e "${MAGENTA}[PHASE 6] $(msg SMB_PHASE6)${NC}"
 echo ""
 
 SMB_CONF="/etc/samba/smb.conf"
 BACKUP_CONF="${SMB_CONF}.backup.$(date +%Y%m%d_%H%M%S)"
 
-info "Sichere bestehende Konfiguration..."
+info "$(msg SMB_BACKUP_CONFIG)"
 cp "$SMB_CONF" "$BACKUP_CONF"
-success "Backup erstellt: $BACKUP_CONF"
+success "$(msg SMB_BACKUP_CREATED): $BACKUP_CONF"
 
-# Prüfe ob [global] Sektion existiert
+# Check if [global] section exists
 if ! grep -q "^\[global\]" "$SMB_CONF"; then
-    error "[global] Sektion nicht in smb.conf gefunden!"
+    [[ "$LANG_CODE" == "en" ]] && error "[global] section not found in smb.conf!" || error "[global] Sektion nicht in smb.conf gefunden!"
     exit 1
 fi
 
-# Bereinige Konfiguration
-info "Bereinige Konfiguration..."
-# Entferne Inline-Kommentare und fehlerhafte Zeilen
+# Clean configuration
+info "$(msg SMB_CLEAN_CONFIG)"
+# Remove inline comments and faulty lines
 sed -i '/# ← NICHT/d' "$SMB_CONF"
 sed -i '/^[[:space:]]*$/N;/^\n$/d' "$SMB_CONF"
 
-# Entferne vfs objects aus [global] falls vorhanden
+# Remove vfs objects from [global] if present
 sed -i '/^\[global\]/,/^\[/{/^[[:space:]]*vfs objects/d}' "$SMB_CONF"
 sed -i '/^\[global\]/,/^\[/{/^[[:space:]]*fruit:/d}' "$SMB_CONF"
 
-# Setze NetBIOS Name korrekt
+# Set NetBIOS name correctly
 if ! grep -q "^[[:space:]]*netbios name" "$SMB_CONF"; then
     sed -i "/^\[global\]/a \   netbios name = $NETBIOS_NAME" "$SMB_CONF"
-    success "NetBIOS-Name gesetzt: $NETBIOS_NAME"
+    success "$(msg SMB_NETBIOS_SET): $NETBIOS_NAME"
 elif grep -q "^[[:space:]]*netbios name.*${HOSTNAME}" "$SMB_CONF" && [ $HOSTNAME_LENGTH -gt 15 ]; then
     sed -i "s/netbios name.*/netbios name = $NETBIOS_NAME/" "$SMB_CONF"
-    success "NetBIOS-Name gekürzt: $NETBIOS_NAME"
+    [[ "$LANG_CODE" == "en" ]] && success "NetBIOS name shortened: $NETBIOS_NAME" || success "NetBIOS-Name gekürzt: $NETBIOS_NAME"
 fi
 
-# Füge Log-Level hinzu falls nicht vorhanden
+# Add log level if not present
 if ! grep -q "^[[:space:]]*log level" "$SMB_CONF"; then
     sed -i '/^\[global\]/a \   log level = 2' "$SMB_CONF"
 fi
 
-# macOS/Brother-Kompatibilität in [global] (NUR Basis-Optionen)
-info "Konfiguriere Basis-Kompatibilität..."
+# macOS/Brother compatibility in [global] (base options only)
+info "$(msg SMB_CONFIG_COMPAT)"
 if ! grep -q "fruit:aapl" "$SMB_CONF"; then
     sed -i '/^\[global\]/a \
    # macOS and Scanner Compatibility\
@@ -482,17 +495,17 @@ if ! grep -q "fruit:aapl" "$SMB_CONF"; then
    \
    # Unix Extensions deaktivieren\
    unix extensions = no' "$SMB_CONF"
-    success "Basis-Kompatibilität hinzugefügt"
+    success "$(msg SMB_COMPAT_ADDED)"
 fi
 
-# Entferne alte Freigaben-Sektionen komplett
-info "Entferne alte Freigaben-Konfigurationen..."
+# Remove old share sections completely
+info "$(msg SMB_REMOVE_OLD_SHARES)"
 sed -i '/^\[mayan-watch\]/,/^$/d' "$SMB_CONF"
 sed -i '/^\[mayan-staging\]/,/^$/d' "$SMB_CONF"
 sed -i '/^# Mayan EDMS/d' "$SMB_CONF"
 
-# Füge KORREKTE Freigaben hinzu
-info "Erstelle neue Freigaben-Konfiguration..."
+# Add CORRECT shares
+info "$(msg SMB_CREATE_SHARES)"
 cat >> "$SMB_CONF" << EOF
 
 [mayan-watch]
@@ -530,21 +543,21 @@ cat >> "$SMB_CONF" << EOF
    fruit:encoding = native
 EOF
 
-success "Freigaben konfiguriert"
+success "$(msg SMB_SHARES_CONFIGURED)"
 
-# Konfiguration validieren
-info "Validiere Samba-Konfiguration..."
+# Validate configuration
+info "$(msg SMB_VALIDATE_CONFIG)"
 if testparm -s "$SMB_CONF" &>/dev/null; then
-    success "Samba-Konfiguration gültig"
-    
-    # Prüfe auf kritische Warnungen
+    success "$(msg SMB_CONFIG_VALID)"
+
+    # Check for critical warnings
     TESTPARM_OUTPUT=$(testparm -s "$SMB_CONF" 2>&1)
     if echo "$TESTPARM_OUTPUT" | grep -qi "ERROR"; then
-        error "testparm zeigt Fehler - bitte manuell prüfen"
+        [[ "$LANG_CODE" == "en" ]] && error "testparm shows errors - please check manually" || error "testparm zeigt Fehler - bitte manuell prüfen"
     fi
 else
-    error "Samba-Konfiguration ungültig!"
-    info "Stelle Backup wieder her..."
+    error "$(msg SMB_CONFIG_INVALID)"
+    [[ "$LANG_CODE" == "en" ]] && info "Restoring backup..." || info "Stelle Backup wieder her..."
     cp "$BACKUP_CONF" "$SMB_CONF"
     exit 1
 fi
@@ -552,195 +565,195 @@ fi
 echo ""
 
 # ============================================================================
-# PHASE 7: Dienste starten
+# PHASE 7: Start Services / Dienste starten
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 7] Dienste starten${NC}"
+echo -e "${MAGENTA}[PHASE 7] $(msg SMB_PHASE7)${NC}"
 echo ""
 
-info "Aktiviere Samba-Autostart..."
+info "$(msg SMB_ENABLE_AUTOSTART)"
 systemctl enable smbd nmbd &>/dev/null
-success "Autostart aktiviert"
+success "$(msg SMB_AUTOSTART_ENABLED)"
 
-info "Starte Samba-Dienste neu..."
+info "$(msg SMB_RESTART_SERVICES)"
 systemctl restart smbd nmbd
 
 sleep 3
 
 if systemctl is-active --quiet smbd && systemctl is-active --quiet nmbd; then
-    success "Samba-Dienste laufen"
+    success "$(msg SMB_SERVICES_RUNNING)"
 else
-    error "Samba-Dienste konnten nicht gestartet werden"
-    info "Status prüfen mit: systemctl status smbd nmbd"
+    error "$(msg SMB_SERVICES_FAILED)"
+    [[ "$LANG_CODE" == "en" ]] && info "Check status with: systemctl status smbd nmbd" || info "Status prüfen mit: systemctl status smbd nmbd"
 fi
 
-# Firewall prüfen und konfigurieren
+# Check and configure firewall
 if command -v ufw &> /dev/null; then
     if ufw status | grep -q "Status: active"; then
-        info "UFW Firewall erkannt, öffne Samba-Ports..."
+        info "$(msg SMB_UFW_DETECTED)"
         ufw allow samba &>/dev/null
-        success "Samba-Ports in UFW freigegeben"
+        success "$(msg SMB_UFW_OPENED)"
     fi
 fi
 
 echo ""
 
 # ============================================================================
-# PHASE 8: Umfassende Tests
+# PHASE 8: Comprehensive Tests / Umfassende Tests
 # ============================================================================
 
-echo -e "${MAGENTA}[PHASE 8] Umfassende Tests${NC}"
+echo -e "${MAGENTA}[PHASE 8] $(msg SMB_PHASE8)${NC}"
 echo ""
 
 TEST_FAILED=false
 
-# Test 1: Unix-Benutzer Dateierstellung
-echo -e "${BLUE}Test 1: Unix-Benutzer Dateierstellung${NC}"
+# Test 1: Unix user file creation
+[[ "$LANG_CODE" == "en" ]] && echo -e "${BLUE}Test 1: Unix User File Creation${NC}" || echo -e "${BLUE}Test 1: Unix-Benutzer Dateierstellung${NC}"
 TEST_FILE="$WATCH_DIR/test_unix_$USERNAME.txt"
 if sudo -u "$USERNAME" touch "$TEST_FILE" 2>/dev/null; then
     if [ -f "$TEST_FILE" ]; then
         FILE_OWNER=$(stat -c '%U' "$TEST_FILE")
-        success "Datei erstellt (Owner: $FILE_OWNER)"
+        [[ "$LANG_CODE" == "en" ]] && success "File created (Owner: $FILE_OWNER)" || success "Datei erstellt (Owner: $FILE_OWNER)"
         rm -f "$TEST_FILE"
     else
-        error "Datei konnte nicht verifiziert werden"
+        error "$(msg SMB_TEST_FILE_VERIFY_FAILED)"
         TEST_FAILED=true
     fi
 else
-    error "Benutzer kann keine Dateien erstellen"
+    error "$(msg SMB_TEST_USER_NO_CREATE)"
     TEST_FAILED=true
 fi
 
-# Test 2: Samba-Benutzer existiert
-echo -e "${BLUE}Test 2: Samba-Benutzer${NC}"
+# Test 2: Samba user exists
+[[ "$LANG_CODE" == "en" ]] && echo -e "${BLUE}Test 2: Samba User${NC}" || echo -e "${BLUE}Test 2: Samba-Benutzer${NC}"
 if pdbedit -L 2>/dev/null | grep -q "^$USERNAME:"; then
-    success "Samba-Benutzer existiert"
+    success "$(msg SMB_TEST_SMB_USER_EXISTS)"
 else
-    error "Samba-Benutzer nicht gefunden"
+    error "$(msg SMB_TEST_SMB_USER_NOT_FOUND)"
     TEST_FAILED=true
 fi
 
-# Test 3: SMB-Freigaben sichtbar (lokal)
-echo -e "${BLUE}Test 3: SMB-Freigaben Sichtbarkeit${NC}"
+# Test 3: SMB Share Visibility
+echo -e "${BLUE}$(msg SMB_TEST3_TITLE)${NC}"
 SMB_LIST=$(smbclient -L localhost -U "$USERNAME%$PASSWORD" -N 2>/dev/null)
 if echo "$SMB_LIST" | grep -q "mayan-watch"; then
-    success "Freigabe 'mayan-watch' sichtbar"
+    [[ "$LANG_CODE" == "en" ]] && success "$(msg SMB_TEST_SHARE_VISIBLE) 'mayan-watch'" || success "$(msg SMB_TEST_SHARE_VISIBLE) 'mayan-watch'"
 else
-    error "Freigabe 'mayan-watch' nicht sichtbar"
+    [[ "$LANG_CODE" == "en" ]] && error "$(msg SMB_TEST_SHARE_NOT_VISIBLE) 'mayan-watch'" || error "$(msg SMB_TEST_SHARE_NOT_VISIBLE) 'mayan-watch'"
     TEST_FAILED=true
 fi
 
-# Test 4: SMB-Verbindung (localhost)
-echo -e "${BLUE}Test 4: SMB-Verbindung (localhost)${NC}"
+# Test 4: SMB Connection (localhost)
+echo -e "${BLUE}$(msg SMB_TEST4_TITLE)${NC}"
 if smbclient //localhost/mayan-watch -U "$USERNAME%$PASSWORD" -c "ls" &>/dev/null; then
-    success "SMB-Verbindung zu localhost erfolgreich"
+    success "$(msg SMB_TEST_LOCALHOST_OK)"
 else
-    error "SMB-Verbindung zu localhost fehlgeschlagen"
-    info "Prüfe Logs: tail -20 /var/log/samba/log.smbd"
+    error "$(msg SMB_TEST_LOCALHOST_FAILED)"
+    [[ "$LANG_CODE" == "en" ]] && info "Check logs: tail -20 /var/log/samba/log.smbd" || info "Prüfe Logs: tail -20 /var/log/samba/log.smbd"
     TEST_FAILED=true
 fi
 
-# Test 5: SMB-Verbindung (IP-Adresse)
-echo -e "${BLUE}Test 5: SMB-Verbindung (IP: $IP_ADDRS)${NC}"
+# Test 5: SMB Connection (IP)
+echo -e "${BLUE}$(msg SMB_TEST5_TITLE): $IP_ADDRS${NC}"
 if smbclient //$IP_ADDRS/mayan-watch -U "$USERNAME%$PASSWORD" -c "ls" &>/dev/null; then
-    success "SMB-Verbindung über IP erfolgreich"
+    success "$(msg SMB_TEST_IP_OK)"
 else
-    error "SMB-Verbindung über IP fehlgeschlagen"
+    error "$(msg SMB_TEST_IP_FAILED)"
     TEST_FAILED=true
 fi
 
-# Test 6: SMB-Schreibzugriff (KRITISCH)
-echo -e "${BLUE}Test 6: SMB-Schreibzugriff${NC}"
+# Test 6: SMB Write Access (CRITICAL)
+echo -e "${BLUE}$(msg SMB_TEST6_TITLE)${NC}"
 TEST_SMB_FILE="smb_test_$(date +%s).txt"
 if echo "SMB Test" | smbclient //localhost/mayan-watch -U "$USERNAME%$PASSWORD" -c "put - $TEST_SMB_FILE" &>/dev/null; then
     if [ -f "$WATCH_DIR/$TEST_SMB_FILE" ]; then
-        success "SMB-Schreibzugriff funktioniert"
+        success "$(msg SMB_TEST_WRITE_OK)"
         rm -f "$WATCH_DIR/$TEST_SMB_FILE"
     else
-        error "Datei wurde nicht auf Server erstellt"
+        error "$(msg SMB_TEST_FILE_NOT_CREATED)"
         TEST_FAILED=true
     fi
 else
-    error "SMB-Schreibtest fehlgeschlagen"
+    error "$(msg SMB_TEST_WRITE_FAILED)"
     TEST_FAILED=true
 fi
 
-# Test 7: Berechtigungen prüfen
-echo -e "${BLUE}Test 7: Verzeichnis-Berechtigungen${NC}"
+# Test 7: Directory Permissions
+echo -e "${BLUE}$(msg SMB_TEST7_TITLE)${NC}"
 WATCH_PERMS=$(stat -c '%a' "$WATCH_DIR")
 if [ "$WATCH_PERMS" = "777" ]; then
-    success "Watch-Ordner Berechtigungen korrekt (777)"
+    success "$(msg SMB_TEST_PERMS_OK)"
 else
-    warning "Watch-Ordner Berechtigungen: $WATCH_PERMS (sollte 777 sein für vollen Zugriff)"
+    [[ "$LANG_CODE" == "en" ]] && warning "Watch folder permissions: $WATCH_PERMS (should be 777 for full access)" || warning "Watch-Ordner Berechtigungen: $WATCH_PERMS (sollte 777 sein für vollen Zugriff)"
 fi
 
-# Test 8: Samba-Dienste Status
-echo -e "${BLUE}Test 8: Samba-Dienste Status${NC}"
+# Test 8: Samba Services Status
+echo -e "${BLUE}$(msg SMB_TEST8_TITLE)${NC}"
 if systemctl is-active --quiet smbd && systemctl is-active --quiet nmbd; then
-    success "Beide Samba-Dienste aktiv"
+    success "$(msg SMB_TEST_SERVICES_OK)"
 else
-    error "Nicht alle Samba-Dienste laufen"
+    error "$(msg SMB_TEST_SERVICES_NOT_ALL)"
     TEST_FAILED=true
 fi
 
-# Test 9: Autostart-Konfiguration
-echo -e "${BLUE}Test 9: Autostart-Konfiguration${NC}"
+# Test 9: Autostart Configuration
+echo -e "${BLUE}$(msg SMB_TEST9_TITLE)${NC}"
 ALL_ENABLED=true
 systemctl is-enabled --quiet smbd || ALL_ENABLED=false
 systemctl is-enabled --quiet nmbd || ALL_ENABLED=false
 systemctl is-enabled --quiet chrony || ALL_ENABLED=false
 
 if [ "$ALL_ENABLED" = true ]; then
-    success "Alle Dienste für Autostart konfiguriert"
+    success "$(msg SMB_TEST_AUTOSTART_OK)"
 else
-    warning "Nicht alle Dienste haben Autostart aktiviert"
+    warning "$(msg SMB_TEST_AUTOSTART_PARTIAL)"
 fi
 
-# Test 10: Port-Verfügbarkeit
-echo -e "${BLUE}Test 10: SMB-Ports${NC}"
+# Test 10: SMB Ports
+echo -e "${BLUE}$(msg SMB_TEST10_TITLE)${NC}"
 if ss -tulpn 2>/dev/null | grep -q ":445.*smbd"; then
-    success "Port 445 (SMB) ist offen"
+    success "$(msg SMB_TEST_PORT_OK)"
 else
-    error "Port 445 nicht erreichbar"
+    error "$(msg SMB_TEST_PORT_FAILED)"
     TEST_FAILED=true
 fi
 
 echo ""
 
 # ============================================================================
-# Zusammenfassung
+# Summary / Zusammenfassung
 # ============================================================================
 
 echo -e "${MAGENTA}============================================${NC}"
 if [ "$TEST_FAILED" = true ] || [ $ERRORS -gt 0 ]; then
-    echo -e "${YELLOW}Setup mit Warnungen/Fehlern abgeschlossen${NC}"
+    echo -e "${YELLOW}$(msg SMB_SETUP_WITH_WARNINGS)${NC}"
     echo -e "${YELLOW}============================================${NC}"
-    echo -e "${RED}Fehler: $ERRORS${NC}"
-    echo -e "${YELLOW}Warnungen: $WARNINGS${NC}"
+    [[ "$LANG_CODE" == "en" ]] && echo -e "${RED}Errors: $ERRORS${NC}" || echo -e "${RED}Fehler: $ERRORS${NC}"
+    [[ "$LANG_CODE" == "en" ]] && echo -e "${YELLOW}Warnings: $WARNINGS${NC}" || echo -e "${YELLOW}Warnungen: $WARNINGS${NC}"
     echo ""
-    echo -e "${YELLOW}Bitte prüfen Sie die Fehler oben und die Log-Datei:${NC}"
+    echo -e "${YELLOW}$(msg SMB_CHECK_LOG)${NC}"
     echo "  $LOG_FILE"
 else
-    echo -e "${GREEN}✓ Setup erfolgreich abgeschlossen!${NC}"
+    echo -e "${GREEN}$(msg SMB_SETUP_SUCCESS)${NC}"
     echo -e "${GREEN}============================================${NC}"
-    echo -e "${GREEN}Alle Tests bestanden!${NC}"
-    echo -e "${GREEN}Fehler: $ERRORS | Warnungen: $WARNINGS${NC}"
+    echo -e "${GREEN}$(msg SMB_ALL_TESTS_PASSED)${NC}"
+    [[ "$LANG_CODE" == "en" ]] && echo -e "${GREEN}Errors: $ERRORS | Warnings: $WARNINGS${NC}" || echo -e "${GREEN}Fehler: $ERRORS | Warnungen: $WARNINGS${NC}"
 fi
 
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
-echo -e "${BLUE}Konfigurationsdetails${NC}"
+echo -e "${BLUE}$(msg SMB_CONFIG_DETAILS)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
-echo -e "${GREEN}Benutzer:${NC} $USERNAME"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${GREEN}User:${NC} $USERNAME" || echo -e "${GREEN}Benutzer:${NC} $USERNAME"
 echo -e "${GREEN}Hostname:${NC} $(hostname)"
-echo -e "${GREEN}NetBIOS-Name:${NC} $NETBIOS_NAME"
-echo -e "${GREEN}IP-Adresse:${NC} $IP_ADDRS"
-echo -e "${GREEN}Watch-Ordner:${NC} $WATCH_DIR (Berechtigungen: $(stat -c '%a' $WATCH_DIR))"
-echo -e "${GREEN}Staging-Ordner:${NC} $STAGING_DIR (Berechtigungen: $(stat -c '%a' $STAGING_DIR 2>/dev/null || echo 'N/A'))"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${GREEN}NetBIOS Name:${NC} $NETBIOS_NAME" || echo -e "${GREEN}NetBIOS-Name:${NC} $NETBIOS_NAME"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${GREEN}IP Address:${NC} $IP_ADDRS" || echo -e "${GREEN}IP-Adresse:${NC} $IP_ADDRS"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${GREEN}Watch Folder:${NC} $WATCH_DIR (Permissions: $(stat -c '%a' $WATCH_DIR))" || echo -e "${GREEN}Watch-Ordner:${NC} $WATCH_DIR (Berechtigungen: $(stat -c '%a' $WATCH_DIR))"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${GREEN}Staging Folder:${NC} $STAGING_DIR (Permissions: $(stat -c '%a' $STAGING_DIR 2>/dev/null || echo 'N/A'))" || echo -e "${GREEN}Staging-Ordner:${NC} $STAGING_DIR (Berechtigungen: $(stat -c '%a' $STAGING_DIR 2>/dev/null || echo 'N/A'))"
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
-echo -e "${BLUE}SMB-Freigaben${NC}"
+echo -e "${BLUE}$(msg SMB_SHARES_TITLE)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
 echo -e "${GREEN}Windows/Scanner:${NC}"
@@ -756,82 +769,82 @@ echo "  //$IP_ADDRS/mayan-watch"
 echo "  //$IP_ADDRS/mayan-staging"
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
-echo -e "${BLUE}Verbindungstests${NC}"
+echo -e "${BLUE}$(msg SMB_CONNECTION_TESTS)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
-echo -e "${YELLOW}Von macOS Terminal:${NC}"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${YELLOW}From macOS Terminal:${NC}" || echo -e "${YELLOW}Von macOS Terminal:${NC}"
 echo "  smbutil view //$USERNAME@$IP_ADDRS"
 echo "  open \"smb://$IP_ADDRS/mayan-watch\""
 echo "  mount_smbfs //$USERNAME@$IP_ADDRS/mayan-watch ~/mnt/mayan"
 echo ""
-echo -e "${YELLOW}Von Linux:${NC}"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${YELLOW}From Linux:${NC}" || echo -e "${YELLOW}Von Linux:${NC}"
 echo "  smbclient -L $IP_ADDRS -U $USERNAME"
 echo "  smbclient //$IP_ADDRS/mayan-watch -U $USERNAME"
 echo ""
 echo -e "${YELLOW}Brother Scanner ADS-4700W:${NC}"
 echo "  Server: $IP_ADDRS"
-echo "  Freigabe: mayan-watch"
-echo "  Benutzername: $USERNAME"
+[[ "$LANG_CODE" == "en" ]] && echo "  Share: mayan-watch" || echo "  Freigabe: mayan-watch"
+[[ "$LANG_CODE" == "en" ]] && echo "  Username: $USERNAME" || echo "  Benutzername: $USERNAME"
 echo "  Port: 445"
 echo "  Auth: Auto/NTLM"
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
-echo -e "${BLUE}Nächste Schritte${NC}"
+echo -e "${BLUE}$(msg SMB_NEXT_STEPS)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
-echo "1. Testen Sie die Verbindung von Ihrem Client (Mac/Scanner)"
+[[ "$LANG_CODE" == "en" ]] && echo "1. Test the connection from your client (Mac/Scanner)" || echo "1. Testen Sie die Verbindung von Ihrem Client (Mac/Scanner)"
 echo ""
-echo "2. Erstellen Sie Unterordner für Dokumenttypen:"
+[[ "$LANG_CODE" == "en" ]] && echo "2. Create subfolders for document types:" || echo "2. Erstellen Sie Unterordner für Dokumenttypen:"
 echo "   sudo mkdir -p $WATCH_DIR/gmbh/{Eingangsrechnung,Versandbeleg}"
 echo "   sudo chown -R $USERNAME:$USERNAME $WATCH_DIR/gmbh"
 echo "   sudo chmod -R 777 $WATCH_DIR/gmbh"
 echo ""
-echo "3. Konfigurieren Sie in Mayan EDMS die Watch-Folder-Quellen:"
-echo "   System → Quellen → Neue Quelle → Watch folder"
-echo "   - Quelle 1: Pfad 'gmbh/Eingangsrechnung'"
-echo "   - Quelle 2: Pfad 'gmbh/Versandbeleg'"
+[[ "$LANG_CODE" == "en" ]] && echo "3. Configure watch folder sources in Mayan EDMS:" || echo "3. Konfigurieren Sie in Mayan EDMS die Watch-Folder-Quellen:"
+[[ "$LANG_CODE" == "en" ]] && echo "   System → Sources → New Source → Watch folder" || echo "   System → Quellen → Neue Quelle → Watch folder"
+[[ "$LANG_CODE" == "en" ]] && echo "   - Source 1: Path 'gmbh/Eingangsrechnung'" || echo "   - Quelle 1: Pfad 'gmbh/Eingangsrechnung'"
+[[ "$LANG_CODE" == "en" ]] && echo "   - Source 2: Path 'gmbh/Versandbeleg'" || echo "   - Quelle 2: Pfad 'gmbh/Versandbeleg'"
 echo ""
-echo "4. Konfigurieren Sie Ihren Scanner:"
-echo "   - Profil 1 → Ziel: /gmbh/Eingangsrechnung"
-echo "   - Profil 2 → Ziel: /gmbh/Versandbeleg"
+[[ "$LANG_CODE" == "en" ]] && echo "4. Configure your scanner:" || echo "4. Konfigurieren Sie Ihren Scanner:"
+[[ "$LANG_CODE" == "en" ]] && echo "   - Profile 1 → Destination: /gmbh/Eingangsrechnung" || echo "   - Profil 1 → Ziel: /gmbh/Eingangsrechnung"
+[[ "$LANG_CODE" == "en" ]] && echo "   - Profile 2 → Destination: /gmbh/Versandbeleg" || echo "   - Profil 2 → Ziel: /gmbh/Versandbeleg"
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
-echo -e "${BLUE}Dienste${NC}"
+echo -e "${BLUE}$(msg SMB_SERVICES)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
-echo -e "${GREEN}Autostart aktiviert:${NC}"
+echo -e "${GREEN}$(msg SMB_AUTOSTART_ACTIVE)${NC}"
 echo "  ✓ smbd (Samba Server)"
-echo "  ✓ nmbd (NetBIOS Name Service)"
-echo "  ✓ chrony (Zeitsynchronisation)"
+[[ "$LANG_CODE" == "en" ]] && echo "  ✓ nmbd (NetBIOS Name Service)" || echo "  ✓ nmbd (NetBIOS Name Service)"
+[[ "$LANG_CODE" == "en" ]] && echo "  ✓ chrony (Time Synchronization)" || echo "  ✓ chrony (Zeitsynchronisation)"
 echo ""
-echo -e "${YELLOW}Dienste verwalten:${NC}"
+echo -e "${YELLOW}$(msg SMB_MANAGE_SERVICES)${NC}"
 echo "  Status:   systemctl status smbd nmbd"
-echo "  Neu start: systemctl restart smbd nmbd"
+[[ "$LANG_CODE" == "en" ]] && echo "  Restart:  systemctl restart smbd nmbd" || echo "  Neustart: systemctl restart smbd nmbd"
 echo "  Logs:     tail -f /var/log/samba/log.smbd"
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
-echo -e "${BLUE}Troubleshooting${NC}"
+echo -e "${BLUE}$(msg SMB_TROUBLESHOOTING)${NC}"
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
-echo -e "${YELLOW}Bei Problemen:${NC}"
-echo "  1. Logs prüfen:"
+echo -e "${YELLOW}$(msg SMB_IF_PROBLEMS)${NC}"
+[[ "$LANG_CODE" == "en" ]] && echo "  1. Check logs:" || echo "  1. Logs prüfen:"
 echo "     tail -100 /var/log/samba/log.smbd"
-echo "     tail -50 /var/log/samba/log.mac-* # für macOS"
+[[ "$LANG_CODE" == "en" ]] && echo "     tail -50 /var/log/samba/log.mac-* # for macOS" || echo "     tail -50 /var/log/samba/log.mac-* # für macOS"
 echo ""
-echo "  2. Konfiguration testen:"
+[[ "$LANG_CODE" == "en" ]] && echo "  2. Test configuration:" || echo "  2. Konfiguration testen:"
 echo "     testparm -s"
 echo ""
-echo "  3. Verbindung testen:"
+[[ "$LANG_CODE" == "en" ]] && echo "  3. Test connection:" || echo "  3. Verbindung testen:"
 echo "     smbclient //localhost/mayan-watch -U $USERNAME"
 echo ""
-echo "  4. Berechtigungen prüfen:"
+[[ "$LANG_CODE" == "en" ]] && echo "  4. Check permissions:" || echo "  4. Berechtigungen prüfen:"
 echo "     ls -la $WATCH_DIR"
 echo "     getfacl $WATCH_DIR"
 echo ""
-echo "  5. Dienste-Status:"
+[[ "$LANG_CODE" == "en" ]] && echo "  5. Services status:" || echo "  5. Dienste-Status:"
 echo "     systemctl status smbd nmbd"
 echo ""
-echo -e "${YELLOW}Backup der Konfiguration:${NC}"
+[[ "$LANG_CODE" == "en" ]] && echo -e "${YELLOW}Configuration backup:${NC}" || echo -e "${YELLOW}Backup der Konfiguration:${NC}"
 echo "  $BACKUP_CONF"
 echo ""
 echo -e "${GREEN}Setup-Log:${NC} $LOG_FILE"
@@ -839,7 +852,7 @@ echo ""
 echo -e "${BLUE}═══════════════════════════════════════════${NC}"
 echo ""
 
-log "=== Setup abgeschlossen: Fehler=$ERRORS, Warnungen=$WARNINGS ==="
+[[ "$LANG_CODE" == "en" ]] && log "=== Setup completed: Errors=$ERRORS, Warnings=$WARNINGS ===" || log "=== Setup abgeschlossen: Fehler=$ERRORS, Warnungen=$WARNINGS ==="
 
 # Exit Code basierend auf Fehlern
 if [ $ERRORS -gt 0 ]; then

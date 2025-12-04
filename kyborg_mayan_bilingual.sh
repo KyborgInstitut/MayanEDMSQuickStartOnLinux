@@ -1,10 +1,8 @@
 #!/bin/bash
 # =============================================================================
-# Mayan EDMS – Management & Installation Script (Bilingual: EN/DE)
-# For Ubuntu 22.04 / 24.04 on dedicated VM or Proxmox KVM (no LXC!)
+# Mayan EDMS – Management & Installation Script
 # Für Ubuntu 22.04 / 24.04 auf dedizierter VM oder Proxmox KVM (kein LXC!)
-# Version: 2.2 (Bilingual Edition)
-# Date: 04.12.2024
+# Stand: 03.12.2024
 # =============================================================================
 
 set -euo pipefail
@@ -20,17 +18,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MAYAN_DIR="/srv/mayan"
 BACKUP_DIR="/srv/mayan_backups"
 
-# Load language messages
-source "${SCRIPT_DIR}/lang_messages.sh"
-
 # =============================================================================
 # Helper Functions
 # =============================================================================
 
 check_root() {
     if [[ $EUID -ne 0 ]]; then
-        echo -e "${RED}$(msg ROOT_REQUIRED)${NC}"
-        echo "$(msg USE_SUDO)"
+        echo -e "${RED}Dieses Script muss als root ausgeführt werden!${NC}"
+        echo "Bitte verwenden: sudo $0"
         exit 1
     fi
 }
@@ -45,7 +40,7 @@ check_mayan_installed() {
 
 press_enter() {
     echo ""
-    read -p "$(msg PRESS_ENTER)"
+    read -p "Drücke Enter zum Fortfahren..."
 }
 
 # =============================================================================
@@ -55,46 +50,46 @@ press_enter() {
 show_menu() {
     clear
     echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}$(msg MENU_TITLE)${NC}         ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}Mayan EDMS – Management & Installation Script${NC}         ${BLUE}║${NC}"
     echo -e "${BLUE}╠════════════════════════════════════════════════════════════╣${NC}"
 
     if check_mayan_installed; then
-        echo -e "${BLUE}║${NC}  ${GREEN}$(msg STATUS_INSTALLED)${NC}                    ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}Status: Mayan EDMS ist installiert ✓${NC}                    ${BLUE}║${NC}"
     else
-        echo -e "${BLUE}║${NC}  ${YELLOW}$(msg STATUS_NOT_INSTALLED)${NC}                ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${YELLOW}Status: Mayan EDMS ist NICHT installiert${NC}                ${BLUE}║${NC}"
     fi
 
     echo -e "${BLUE}╠════════════════════════════════════════════════════════════╣${NC}"
-    echo -e "${BLUE}║${NC}  ${YELLOW}$(msg MENU_CHOOSE)${NC}                                       ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${YELLOW}Wähle eine Option:${NC}                                       ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}1)${NC} $(msg MENU_1)          ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_1_SUB)                ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}1)${NC} Mayan EDMS installieren (Erstinstallation)          ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Inklusive preTypes Import (optional)                ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}2)${NC} $(msg MENU_2)                        ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_2_SUB)                    ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}2)${NC} SMB/Scanner-Zugang einrichten                        ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Samba-Freigabe für Scanner/macOS                    ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}3)${NC} $(msg MENU_3)                                     ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_3_SUB)                         ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}3)${NC} Backup erstellen                                     ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Sichert Datenbank + Dateien                         ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}4)${NC} $(msg MENU_4)                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_4_SUB)                        ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}4)${NC} Backup-Cronjob einrichten                            ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Automatische tägliche Backups                        ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}5)${NC} $(msg MENU_5)                              ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_5_SUB)                           ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}5)${NC} Backup wiederherstellen                              ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Restore aus Backup-Archiv                           ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}6)${NC} $(msg MENU_6)                                ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_6_SUB)                        ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}6)${NC} Mayan Status anzeigen                                ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Container-Status, Logs, URLs                        ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}7)${NC} $(msg MENU_7)                        ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_7_SUB)              ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}7)${NC} Dokumentquellen konfigurieren                        ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Watch/Staging Folder in GUI einrichten              ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}8)${NC} $(msg MENU_8)                             ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}     $(msg MENU_8_SUB)       ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}8)${NC} Problemlösung & Diagnose                             ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}     → Worker-Timeouts, Celery-Broker, Import-Tests       ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-    echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} $(msg MENU_0)                                              ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} Beenden                                              ${BLUE}║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    read -p "$(msg MENU_PROMPT) " choice
+    read -p "Deine Wahl [0-8]: " choice
     echo ""
 }
 
@@ -354,57 +349,32 @@ EOF
     # ------------------------------------------------------------------
     # 8. preTypes Import (optional)
     # ------------------------------------------------------------------
-    echo -e "${BLUE}[8/9] $(msg INSTALL_PRETYPES_PROMPT)${NC}"
+    echo -e "${BLUE}[8/9] preTypes Import (optional)${NC}"
     echo ""
-    read -r -p "$(msg INSTALL_PRETYPES_PROMPT) $(msg YES_NO) " IMPORT_PRETYPES
+    read -r -p "Möchten Sie die preTypes (273 Metadaten, 113 Dokumenttypen, etc.) importieren? (j/N): " IMPORT_PRETYPES
     IMPORT_PRETYPES=${IMPORT_PRETYPES:-N}
 
-    if [[ "$IMPORT_PRETYPES" =~ ^[jJyY]$ ]]; then
-        # Ask for preTypes language
-        echo ""
-        echo -e "${YELLOW}$(msg INSTALL_PRETYPES_LANG)${NC}"
-        echo ""
-        echo "  $(msg INSTALL_PRETYPES_LANG_EN)"
-        echo "  $(msg INSTALL_PRETYPES_LANG_DE)"
-        echo ""
-        read -r -p "Choose / Wählen [1-2]: " PRETYPES_LANG_CHOICE
-
-        case $PRETYPES_LANG_CHOICE in
-            1)
-                PRETYPES_DIR="preTypes_en"
-                PRETYPES_LANG="en"
-                ;;
-            2)
-                PRETYPES_DIR="preTypes"
-                PRETYPES_LANG="de"
-                ;;
-            *)
-                echo -e "${YELLOW}Invalid choice, using German preTypes${NC}"
-                PRETYPES_DIR="preTypes"
-                PRETYPES_LANG="de"
-                ;;
-        esac
-
+    if [[ "$IMPORT_PRETYPES" =~ ^[jJ]$ ]]; then
         # Restart mayan_app to ensure clean configuration without problematic env vars
-        echo -e "${BLUE}Preparing container for import...${NC}"
+        echo -e "${BLUE}Bereite Container für Import vor...${NC}"
         docker compose up -d --force-recreate mayan_app
 
-        echo -n "Waiting for restart (30 seconds)..."
+        echo -n "Warte auf Neustart (30 Sekunden)"
         for i in {1..30}; do
             echo -n "."
             sleep 1
         done
         echo ""
-        echo -e "${GREEN}✓ Container ready${NC}"
+        echo -e "${GREEN}✓ Container bereit${NC}"
         echo ""
 
-        if [[ -d "${SCRIPT_DIR}/${PRETYPES_DIR}" ]]; then
-            echo "Copying ${PRETYPES_LANG} preTypes to container..."
-            echo "Source: ${SCRIPT_DIR}/${PRETYPES_DIR}"
+        if [[ -d "${SCRIPT_DIR}/preTypes" ]]; then
+            echo "Kopiere preTypes ins Container..."
+            echo "Quelle: ${SCRIPT_DIR}/preTypes"
 
             # Ensure /srv/mayan exists in container and copy preTypes folder
             docker compose exec -T mayan_app mkdir -p /srv/mayan
-            docker compose cp "${SCRIPT_DIR}/${PRETYPES_DIR}" mayan_app:/srv/mayan/preTypes
+            docker compose cp "${SCRIPT_DIR}/preTypes" mayan_app:/srv/mayan/preTypes
 
             if [[ -f "${SCRIPT_DIR}/import_preTypes.sh" ]]; then
                 echo "Kopiere Import-Skripte..."
@@ -824,45 +794,45 @@ troubleshooting_menu() {
     while true; do
         clear
         echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}$(msg TSHOOTING_TITLE)${NC}                                ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}Problemlösung & Diagnose${NC}                                ${BLUE}║${NC}"
         echo -e "${BLUE}╠════════════════════════════════════════════════════════════╣${NC}"
-        echo -e "${BLUE}║${NC}  ${YELLOW}$(msg TSHOOTING_CHOOSE)${NC}                                ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${YELLOW}Wähle ein Diagnose-Tool:${NC}                                ${BLUE}║${NC}"
         echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}1)${NC} $(msg TSHOOTING_1)                 ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_1_SUB)                   ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_1_DESC)                  ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}1)${NC} Celery Broker reparieren (KRITISCH)                 ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Behebt: memory:// statt redis://                   ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Dokumente werden nicht importiert                  ${BLUE}║${NC}"
         echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}2)${NC} $(msg TSHOOTING_2)                              ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_2_SUB)                      ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_2_DESC)               ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}2)${NC} Worker-Timeouts beheben                              ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Behebt: WORKER TIMEOUT Fehler                      ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Erhöht Gunicorn & Celery Zeitlimits               ${BLUE}║${NC}"
         echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}3)${NC} $(msg TSHOOTING_3)                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_3_SUB)          ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_3_DESC)                    ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}3)${NC} Worker-Diagnose ausführen                            ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Zeigt: Celery Status, Queues, Ressourcen          ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Prüft: OCR-Tools, Elasticsearch                    ${BLUE}║${NC}"
         echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}4)${NC} $(msg TSHOOTING_4)          ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_4_SUB)       ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_4_DESC)           ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}4)${NC} Konfiguration verifizieren & Import testen          ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Überprüft: docker-compose.yml Einstellungen       ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Testet: Dokumentquellen, Berechtigungen           ${BLUE}║${NC}"
         echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}5)${NC} $(msg TSHOOTING_5)             ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}     $(msg TSHOOTING_5_SUB)                         ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}5)${NC} Alle Diagnosen & Reparaturen (komplett)             ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}     → Führt 1-4 nacheinander aus                         ${BLUE}║${NC}"
         echo -e "${BLUE}║${NC}                                                            ${BLUE}║${NC}"
-        echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} $(msg TSHOOTING_0)                                 ${BLUE}║${NC}"
+        echo -e "${BLUE}║${NC}  ${GREEN}0)${NC} Zurück zum Hauptmenü                                 ${BLUE}║${NC}"
         echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
         echo ""
-        read -p "$(msg TSHOOTING_PROMPT) " tshooting_choice
+        read -p "Deine Wahl [0-5]: " tshooting_choice
         echo ""
 
         case $tshooting_choice in
             1)
                 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
-                echo -e "${GREEN}  $(msg TSHOOTING_1)${NC}"
+                echo -e "${GREEN}  Celery Broker reparieren${NC}"
                 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
                 echo ""
                 if [[ -f "${SCRIPT_DIR}/fix_celery_broker.sh" ]]; then
-                    MAYAN_LANG="$LANG_CODE" bash "${SCRIPT_DIR}/fix_celery_broker.sh"
+                    bash "${SCRIPT_DIR}/fix_celery_broker.sh"
                 else
-                    echo -e "${RED}✗ fix_celery_broker.sh $(msg TSHOOTING_NOT_FOUND) ${SCRIPT_DIR}${NC}"
+                    echo -e "${RED}✗ fix_celery_broker.sh nicht gefunden in ${SCRIPT_DIR}${NC}"
                 fi
                 press_enter
                 ;;
@@ -960,14 +930,6 @@ troubleshooting_menu() {
 
 main() {
     check_root
-
-    # Select language (only once at startup)
-    select_language
-
-    echo ""
-    echo -e "${GREEN}Language selected: ${LANG_CODE}${NC}"
-    echo -e "${GREEN}Sprache ausgewählt: ${LANG_CODE}${NC}"
-    sleep 2
 
     while true; do
         show_menu
