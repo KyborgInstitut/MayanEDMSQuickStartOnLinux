@@ -1360,3 +1360,18 @@ If this project helped you deploy Mayan EDMS:
 ---
 
 **Happy Document Management! 📄✨**
+
+## Notizarchiv — projektübergreifende Nachweise
+
+Nachgeschlagene **Originalstellen, Begriffsklärungen, Datierungen und kleine Ausarbeitungen** liegen
+im Repo **`../Notizarchiv`** (Forgejo-only, `10.0.6.50:3000/tobias/Notizarchiv`) unter
+`notizen/<thema>/`.
+
+**Vor dem Nachschlagen dort nachsehen, nach dem Nachschlagen dort ablegen** — sonst wird derselbe
+Nachweis im nächsten Repo ein zweites Mal erarbeitet. Das gilt besonders für Stellen, die mehrere
+Werke berühren: ein Originalzitat und seine Übersetzung, die Herkunft eines Begriffs, eine
+strittige Zuschreibung.
+
+**Das Archiv ist Nachschlagewerk, nicht Arbeitsort.** Was in ein Werk gehört, steht im Werk-Repo
+(Apparat, Prüfvermerk, Live-Text); im Archiv steht die **Grundlage** samt Rückverweis.
+**Bei Widerspruch gilt das Werk-Repo** — das Archiv trägt die Herleitung, nicht die Entscheidung.
